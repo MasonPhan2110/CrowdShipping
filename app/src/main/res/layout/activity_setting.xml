@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Home.SettingActivity"
+    android:orientation="vertical"
+    android:background="@color/lightgray">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bar_layout"
+        app:elevation="0dp"
+        android:background="@color/white">
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar"
+            android:background="@color/green">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="15dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quyền riêng tư"
+            android:textStyle="bold"
+            android:textColor="@color/green"
+            android:layout_marginBottom="15dp"
+            android:textSize="18dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tuơng tác truyền thông"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quảng cáo"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chia sẻ thông tin"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:layout_marginTop="15dp"
+            android:clickable="true"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="15dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bảo mật"
+            android:textStyle="bold"
+            android:textColor="@color/green"
+            android:textSize="18dp"
+            android:layout_marginBottom="15dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cập nhật mã pin"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phương thức khôi phục"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xác thực vân tay"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:layout_marginTop="15dp"
+            android:clickable="true"/>
+    </LinearLayout>
+
+</LinearLayout>

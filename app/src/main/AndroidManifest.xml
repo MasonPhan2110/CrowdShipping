@@ -35,10 +35,6 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".MapsActivity"
-            android:exported="true"
-            android:label="@string/title_activity_maps" />
-        <activity
             android:name=".Home.CarrierActivity"
             android:exported="true" />
         <activity
