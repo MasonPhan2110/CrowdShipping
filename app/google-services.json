@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "69865729734",
+    "project_id": "crowdshipping-387fa",
+    "storage_bucket": "crowdshipping-387fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:69865729734:android:03aebfa2a70ac23ac031c7",
+        "android_client_info": {
+          "package_name": "com.Duong.crowdshipping"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "69865729734-f68dd6eev7mvao6kgfgddp4b57om4i82.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Duong.crowdshipping",
+            "certificate_hash": "e7dd314f6b5dc5bda82a77a2553175f23bdc1afe"
+          }
+        },
+        {
+          "client_id": "69865729734-7ou4eb7sig0a3sanfs1sj1n9n1i3ikue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrvfhaiJkoSllYbiqCR06-O3B1uGUGZeM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "69865729734-7ou4eb7sig0a3sanfs1sj1n9n1i3ikue.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
