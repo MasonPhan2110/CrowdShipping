@@ -6,28 +6,76 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".Home.HomeActivity">
 
-<androidx.viewpager.widget.ViewPager
-    android:id="@+id/view_pager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_above="@id/devine_line"
-    android:background="@color/white" />
-<View
-    android:id="@+id/devine_line"
-    android:layout_width="match_parent"
-    android:layout_height="0.75dp"
-    android:layout_above="@id/navigation"
-    android:layout_alignParentStart="true"
-    android:background="@color/lightgray" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/tabBar"
+        android:padding="5dp"
+        android:orientation="horizontal"
+        android:background="@color/green"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            android:text="Title"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:visibility="gone"/>
+        <LinearLayout
+            android:layout_width="370dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:background="@drawable/background_search_box"
+            android:id="@+id/search_box"
+            android:layout_marginRight="5dp"
+            android:clickable="true">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_search_24"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tìm kiếm trên chợ tốt"
+                android:textColor="@color/mediumgray"
+                android:textSize="17dp"/>
+        </LinearLayout>
 
-<com.google.android.material.bottomnavigation.BottomNavigationView
-    android:id="@+id/navigation"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="@color/white"
-    app:elevation="0dp"
-    app:itemBackground="@color/white"
-    app:itemTextAppearanceActive="@style/textbottomnavigation"
-    app:menu="@menu/navigation" />
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_round_chat_24"
+            android:id="@+id/message" />
+
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_below="@+id/tabBar"
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/devine_line"
+        android:background="@color/white" />
+    <View
+        android:id="@+id/devine_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.75dp"
+        android:layout_above="@id/navigation"
+        android:layout_alignParentStart="true"
+        android:background="@color/lightgray" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        app:elevation="0dp"
+        app:itemBackground="@color/white"
+        app:itemTextAppearanceActive="@style/textbottomnavigation"
+        app:menu="@menu/navigation" />
 </RelativeLayout>

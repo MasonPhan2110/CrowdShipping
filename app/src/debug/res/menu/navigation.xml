@@ -2,23 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/home"
-        android:icon="@drawable/ic_baseline_explore_24"
+        android:icon="@drawable/ic_round_home_24"
         android:title="Trang chủ" />
 
     <item
         android:id="@+id/activity"
-        android:icon="@drawable/ic_outline_receipt_long_24"
-        android:title="Hoạt động" />
+        android:icon="@drawable/ic_outline_article_24"
+        android:title="Quản lý tin" />
     <item
         android:id="@+id/pay"
-        android:icon="@drawable/ic_outline_account_balance_wallet_24"
-        android:title="Thanh toán" />
+        android:icon="@drawable/ic_outline_border_color_24"
+        android:title="Đăng tin" />
     <item
         android:id="@+id/chat"
-        android:icon="@drawable/ic_baseline_chat_bubble_outline_24"
-        android:title="Nhắn tin" />
+        android:icon="@drawable/ic_round_notifications_none_24"
+        android:title="Thông báo" />
     <item
         android:id="@+id/account"
-        android:icon="@drawable/ic_outline_account_circle_24"
-        android:title="Thanh toán" />
+        android:icon="@drawable/ic_round_menu_24"
+        android:title="Thêm" />
 </menu>

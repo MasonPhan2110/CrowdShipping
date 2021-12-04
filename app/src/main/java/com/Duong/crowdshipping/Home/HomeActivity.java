@@ -25,9 +25,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.Duong.crowdshipping.adapter.CustomExpandableListAdapter;
 import com.Duong.crowdshipping.model.Cars;
@@ -57,31 +59,22 @@ public class HomeActivity extends AppCompatActivity {
 
     BottomNavigationView navigation;
     ViewPager view_pager;
-    ExpandableListView list_car;
-    List<Cars> mCars;
-    List<String> Cars;
-    List<String> listTitle;
-    ExpandableListAdapter listAdapter;
-    HashMap<String, List<String>> expandListDetail;
-    List<String> ID = new ArrayList<>();
-    List<String> Name = new ArrayList<>();
-    List<String> Plate = new ArrayList<>();
-    List<String> Status = new ArrayList<>();
-    String ID_car;
-    FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+    TextView title;
+    LinearLayout searchBox;
+    ImageView message;
     private int[] selectitem = {
-            R.drawable.ic_baseline_explore_24,
-            R.drawable.ic_baseline_receipt_long_24,
-            R.drawable.ic_baseline_account_balance_wallet_24,
-            R.drawable.ic_baseline_chat_bubble_24,
-            R.drawable.ic_baseline_account_circle_24
+            R.drawable.ic_round_home_24,
+            R.drawable.ic_round_article_24,
+            R.drawable.ic_round_border_color_24,
+            R.drawable.ic_baseline_notifications_active_24,
+            R.drawable.ic_round_menu_open_24
     };
     private int[] unselectitem={
-            R.drawable.ic_outline_explore_24,
-            R.drawable.ic_outline_receipt_long_24,
-            R.drawable.ic_outline_account_balance_wallet_24,
-            R.drawable.ic_baseline_chat_bubble_outline_24,
-            R.drawable.ic_outline_account_circle_24
+            R.drawable.ic_outline_home_24,
+            R.drawable.ic_outline_article_24,
+            R.drawable.ic_outline_border_color_24,
+            R.drawable.ic_round_notifications_none_24,
+            R.drawable.ic_round_menu_24
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +87,7 @@ public class HomeActivity extends AppCompatActivity {
         Window window = HomeActivity.this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.setStatusBarColor(HomeActivity.this.getResources().getColor(R.color.white));
+        window.setStatusBarColor(HomeActivity.this.getResources().getColor(R.color.green));
         window.setNavigationBarColor(HomeActivity.this.getResources().getColor(android.R.color.white));
 
         navigation = findViewById(R.id.navigation);
@@ -102,23 +95,18 @@ public class HomeActivity extends AppCompatActivity {
         setupViewPager(view_pager);
         navigation.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
         view_pager.addOnPageChangeListener(onPageChangeListener);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getCarInfor();
-            }
-        },100);
 
-
-
+        title = findViewById(R.id.title);
+        searchBox = findViewById(R.id.search_box);
+        message = findViewById(R.id.message);
     }
     private void setupViewPager(ViewPager view_pager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new HomeFragment(), "Trang chủ");
-        adapter.addFragment(new ActivityFragment(), "Hoạt động");
-        adapter.addFragment(new PayFragment(),"Thanh toán");
+        adapter.addFragment(new ActivityFragment(), "Quản lý tin");
+        adapter.addFragment(new PayFragment(),"Đăng tin");
         adapter.addFragment(new ChatFragment(),"Nhắn tin");
-        adapter.addFragment(new AccountFragment(),"Tài khoản");
+        adapter.addFragment(new AccountFragment(),"Thêm");
         view_pager.setAdapter(adapter);
     }
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -157,6 +145,8 @@ public class HomeActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()){
                 case R.id.home:
+                    searchBox.setVisibility(View.VISIBLE);
+                    title.setVisibility(View.GONE);
                     view_pager.setCurrentItem(0);
                     navigation.getMenu().findItem(R.id.home).setIcon(selectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
@@ -165,6 +155,8 @@ public class HomeActivity extends AppCompatActivity {
                     navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
                     break;
                 case R.id.activity:
+                    searchBox.setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
                     view_pager.setCurrentItem(1);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(selectitem[1]);
@@ -173,6 +165,8 @@ public class HomeActivity extends AppCompatActivity {
                     navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
                     break;
                 case R.id.pay:
+                    searchBox.setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
                     view_pager.setCurrentItem(2);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
@@ -181,6 +175,8 @@ public class HomeActivity extends AppCompatActivity {
                     navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
                     break;
                 case R.id.chat:
+                    searchBox.setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
                     view_pager.setCurrentItem(3);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
@@ -189,6 +185,8 @@ public class HomeActivity extends AppCompatActivity {
                     navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
                     break;
                 case R.id.account:
+                    searchBox.setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
                     view_pager.setCurrentItem(4);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
@@ -210,6 +208,8 @@ public class HomeActivity extends AppCompatActivity {
         public void onPageSelected(int position) {
             switch (position){
                 case 0:
+                    searchBox.setVisibility(View.VISIBLE);
+                    title.setVisibility(View.GONE);
                     navigation.getMenu().findItem(R.id.home).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(selectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
@@ -218,6 +218,8 @@ public class HomeActivity extends AppCompatActivity {
                     navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
                     break;
                 case 1:
+                    searchBox.setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
                     navigation.getMenu().findItem(R.id.activity).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(selectitem[1]);
@@ -226,6 +228,8 @@ public class HomeActivity extends AppCompatActivity {
                     navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
                     break;
                 case 2:
+                    searchBox.setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
                     navigation.getMenu().findItem(R.id.pay).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
@@ -234,6 +238,8 @@ public class HomeActivity extends AppCompatActivity {
                     navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
                     break;
                 case 3:
+                    searchBox.setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
                     navigation.getMenu().findItem(R.id.chat).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
@@ -242,6 +248,8 @@ public class HomeActivity extends AppCompatActivity {
                     navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
                     break;
                 case 4:
+                    searchBox.setVisibility(View.GONE);
+                    title.setVisibility(View.VISIBLE);
                     navigation.getMenu().findItem(R.id.account).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
@@ -256,112 +264,4 @@ public class HomeActivity extends AppCompatActivity {
 
         }
     };
-    private void getCarInfor() {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.popup_start_window,null);
-        PopupWindow window = new PopupWindow(layout, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
-        window.setOutsideTouchable(false);
-        int layout_height = 1200;
-        int layout_width = getResources().getDisplayMetrics().widthPixels - 50;
-        window.setHeight(layout_height);
-        window.setWidth(layout_width);
-        window.setAnimationStyle(R.style.Animation);
-        window.setBackgroundDrawable(getDrawable(R.drawable.background_popup_1));
-        window.update(0, 0, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        window.setOutsideTouchable(false);
-//        window.setFocusable(true);
-//        window.setTouchModal(false);
-//        layout.
-        window.showAtLocation(layout, Gravity.BOTTOM, 0, 500);
-        View container = window.getContentView().getRootView();
-        Log.d("AAA", String.valueOf(window.isOutsideTouchable()));
-        if(container!= null){
-            WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
-            WindowManager.LayoutParams p = (WindowManager.LayoutParams)container.getLayoutParams();
-            p.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-            p.dimAmount = 0.5f;
-            if(wm != null) {
-                wm.updateViewLayout(container, p);
-            }
-        }
-
-        list_car = layout.findViewById(R.id.list_Car);
-
-        expandListDetail = new HashMap<String, List<String>>();
-        listTitle = new ArrayList<>();
-        mCars = new ArrayList<>();
-        Cars = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(fuser.getUid()).child("Cars");
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    mCars.add(dataSnapshot.getValue(Cars.class));
-                }
-
-                for (int i = 0; i < mCars.size(); i++) {
-                    Name.add(mCars.get(i).getVehicle());
-                    Plate.add(mCars.get(i).getPlate());
-                    ID.add(mCars.get(i).getId());
-                    Status.add(mCars.get(i).getStatus());
-                    Cars.add(mCars.get(i).getVehicle() + " - " + mCars.get(i).getPlate());
-                }
-                Cars.add("Khác...");
-                expandListDetail.put("Chọn xe", Cars);
-                listTitle = new ArrayList<>(expandListDetail.keySet());
-                listAdapter = new CustomExpandableListAdapter(getApplicationContext(), listTitle, expandListDetail);
-                list_car.setAdapter(listAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        list_car.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                int dp = 50*(list_car.getAdapter().getCount());
-                int px = (int) (dp * getResources().getDisplayMetrics().density);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        px
-                );
-                layoutParams.setMargins(0, (int) (15 * getResources().getDisplayMetrics().density), 0, 0);
-                list_car.setLayoutParams(layoutParams);
-            }
-        });
-        list_car.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                int dp = 50;
-                int px = (int) (dp * getResources().getDisplayMetrics().density);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        px
-                );
-                layoutParams.setMargins(0, (int) (15 * getResources().getDisplayMetrics().density), 0, 0);
-                list_car.setLayoutParams(layoutParams);
-            }
-        });
-        list_car.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Log.d("AAA", String.valueOf(ID.size()));
-                if(childPosition==ID.size()){
-
-                }else{
-                    ID_car = ID.get(childPosition);
-                    SharedPreferences.Editor editor = getSharedPreferences("Car_Info",MODE_PRIVATE).edit();
-                    editor.putString("ID_car",ID_car);
-                    editor.putString("Name_car",Name.get(childPosition));
-                    editor.putString("Plate_car",Plate.get(childPosition));
-                    editor.putString("Status",Status.get(childPosition));
-                    editor.apply();
-                    window.dismiss();
-                }
-                return false;
-            }
-        });
-    }
 }
