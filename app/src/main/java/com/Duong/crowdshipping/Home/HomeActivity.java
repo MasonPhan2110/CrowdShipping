@@ -32,6 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.Duong.crowdshipping.adapter.CustomExpandableListAdapter;
+import com.Duong.crowdshipping.fragment.NotiFragment;
 import com.Duong.crowdshipping.model.Cars;
 import com.Duong.crowdshipping.Login.LoginActivity;
 import com.Duong.crowdshipping.R;
@@ -99,13 +100,20 @@ public class HomeActivity extends AppCompatActivity {
         title = findViewById(R.id.title);
         searchBox = findViewById(R.id.search_box);
         message = findViewById(R.id.message);
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, ConversationActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     private void setupViewPager(ViewPager view_pager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new HomeFragment(), "Trang chủ");
         adapter.addFragment(new ActivityFragment(), "Quản lý tin");
         adapter.addFragment(new PayFragment(),"Đăng tin");
-        adapter.addFragment(new ChatFragment(),"Nhắn tin");
+        adapter.addFragment(new NotiFragment(),"Thông báo");
         adapter.addFragment(new AccountFragment(),"Thêm");
         view_pager.setAdapter(adapter);
     }
@@ -147,52 +155,57 @@ public class HomeActivity extends AppCompatActivity {
                 case R.id.home:
                     searchBox.setVisibility(View.VISIBLE);
                     title.setVisibility(View.GONE);
+                    title.setText("Trang chủ");
                     view_pager.setCurrentItem(0);
                     navigation.getMenu().findItem(R.id.home).setIcon(selectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
-                    navigation.getMenu().findItem(R.id.pay).setIcon(unselectitem[2]);
-                    navigation.getMenu().findItem(R.id.chat).setIcon(unselectitem[3]);
-                    navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
+                    navigation.getMenu().findItem(R.id.create_post).setIcon(unselectitem[2]);
+                    navigation.getMenu().findItem(R.id.noti).setIcon(unselectitem[3]);
+                    navigation.getMenu().findItem(R.id.menu).setIcon(unselectitem[4]);
                     break;
                 case R.id.activity:
                     searchBox.setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
+                    title.setText("Quản lý tin");
                     view_pager.setCurrentItem(1);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(selectitem[1]);
-                    navigation.getMenu().findItem(R.id.pay).setIcon(unselectitem[2]);
-                    navigation.getMenu().findItem(R.id.chat).setIcon(unselectitem[3]);
-                    navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
+                    navigation.getMenu().findItem(R.id.create_post).setIcon(unselectitem[2]);
+                    navigation.getMenu().findItem(R.id.noti).setIcon(unselectitem[3]);
+                    navigation.getMenu().findItem(R.id.menu).setIcon(unselectitem[4]);
                     break;
-                case R.id.pay:
+                case R.id.create_post:
                     searchBox.setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
+                    title.setText("Đăng tin");
                     view_pager.setCurrentItem(2);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
-                    navigation.getMenu().findItem(R.id.pay).setIcon(selectitem[2]);
-                    navigation.getMenu().findItem(R.id.chat).setIcon(unselectitem[3]);
-                    navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
+                    navigation.getMenu().findItem(R.id.create_post).setIcon(selectitem[2]);
+                    navigation.getMenu().findItem(R.id.noti).setIcon(unselectitem[3]);
+                    navigation.getMenu().findItem(R.id.menu).setIcon(unselectitem[4]);
                     break;
-                case R.id.chat:
+                case R.id.noti:
                     searchBox.setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
+                    title.setText("Thông báo");
                     view_pager.setCurrentItem(3);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
-                    navigation.getMenu().findItem(R.id.pay).setIcon(unselectitem[2]);
-                    navigation.getMenu().findItem(R.id.chat).setIcon(selectitem[3]);
-                    navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
+                    navigation.getMenu().findItem(R.id.create_post).setIcon(unselectitem[2]);
+                    navigation.getMenu().findItem(R.id.noti).setIcon(selectitem[3]);
+                    navigation.getMenu().findItem(R.id.menu).setIcon(unselectitem[4]);
                     break;
-                case R.id.account:
+                case R.id.menu:
                     searchBox.setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
+                    title.setText("Thêm");
                     view_pager.setCurrentItem(4);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
-                    navigation.getMenu().findItem(R.id.pay).setIcon(unselectitem[2]);
-                    navigation.getMenu().findItem(R.id.chat).setIcon(unselectitem[3]);
-                    navigation.getMenu().findItem(R.id.account).setIcon(selectitem[4]);
+                    navigation.getMenu().findItem(R.id.create_post).setIcon(unselectitem[2]);
+                    navigation.getMenu().findItem(R.id.noti).setIcon(unselectitem[3]);
+                    navigation.getMenu().findItem(R.id.menu).setIcon(selectitem[4]);
                     break;
             }
             return true;
@@ -210,52 +223,57 @@ public class HomeActivity extends AppCompatActivity {
                 case 0:
                     searchBox.setVisibility(View.VISIBLE);
                     title.setVisibility(View.GONE);
+                    title.setText("Trang chủ");
                     navigation.getMenu().findItem(R.id.home).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(selectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
-                    navigation.getMenu().findItem(R.id.pay).setIcon(unselectitem[2]);
-                    navigation.getMenu().findItem(R.id.chat).setIcon(unselectitem[3]);
-                    navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
+                    navigation.getMenu().findItem(R.id.create_post).setIcon(unselectitem[2]);
+                    navigation.getMenu().findItem(R.id.noti).setIcon(unselectitem[3]);
+                    navigation.getMenu().findItem(R.id.menu).setIcon(unselectitem[4]);
                     break;
                 case 1:
                     searchBox.setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
+                    title.setText("Quản lý tin");
                     navigation.getMenu().findItem(R.id.activity).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(selectitem[1]);
-                    navigation.getMenu().findItem(R.id.pay).setIcon(unselectitem[2]);
-                    navigation.getMenu().findItem(R.id.chat).setIcon(unselectitem[3]);
-                    navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
+                    navigation.getMenu().findItem(R.id.create_post).setIcon(unselectitem[2]);
+                    navigation.getMenu().findItem(R.id.noti).setIcon(unselectitem[3]);
+                    navigation.getMenu().findItem(R.id.menu).setIcon(unselectitem[4]);
                     break;
                 case 2:
                     searchBox.setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
-                    navigation.getMenu().findItem(R.id.pay).setChecked(true);
+                    title.setText("Đăng tin");
+                    navigation.getMenu().findItem(R.id.create_post).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
-                    navigation.getMenu().findItem(R.id.pay).setIcon(selectitem[2]);
-                    navigation.getMenu().findItem(R.id.chat).setIcon(unselectitem[3]);
-                    navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
+                    navigation.getMenu().findItem(R.id.create_post).setIcon(selectitem[2]);
+                    navigation.getMenu().findItem(R.id.noti).setIcon(unselectitem[3]);
+                    navigation.getMenu().findItem(R.id.menu).setIcon(unselectitem[4]);
                     break;
                 case 3:
                     searchBox.setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
-                    navigation.getMenu().findItem(R.id.chat).setChecked(true);
+                    title.setText("Thông báo");
+                    navigation.getMenu().findItem(R.id.noti).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
-                    navigation.getMenu().findItem(R.id.pay).setIcon(unselectitem[2]);
-                    navigation.getMenu().findItem(R.id.chat).setIcon(selectitem[3]);
-                    navigation.getMenu().findItem(R.id.account).setIcon(unselectitem[4]);
+                    navigation.getMenu().findItem(R.id.create_post).setIcon(unselectitem[2]);
+                    navigation.getMenu().findItem(R.id.noti).setIcon(selectitem[3]);
+                    navigation.getMenu().findItem(R.id.menu).setIcon(unselectitem[4]);
                     break;
                 case 4:
                     searchBox.setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
-                    navigation.getMenu().findItem(R.id.account).setChecked(true);
+                    title.setText("Thêm");
+                    navigation.getMenu().findItem(R.id.menu).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
-                    navigation.getMenu().findItem(R.id.pay).setIcon(unselectitem[2]);
-                    navigation.getMenu().findItem(R.id.chat).setIcon(unselectitem[3]);
-                    navigation.getMenu().findItem(R.id.account).setIcon(selectitem[4]);
+                    navigation.getMenu().findItem(R.id.create_post).setIcon(unselectitem[2]);
+                    navigation.getMenu().findItem(R.id.noti).setIcon(unselectitem[3]);
+                    navigation.getMenu().findItem(R.id.menu).setIcon(selectitem[4]);
             }
         }
 

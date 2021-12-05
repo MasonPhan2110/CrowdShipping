@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">CrowdShipping</string>
-    <string name="title_activity_maps">MapsActivity</string>
     <string name="facebook_app_id">567899397646142</string>
-    <string name="fb_login_protocol_scheme">fb567899397646142</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

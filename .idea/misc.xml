@@ -41,9 +41,10 @@
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/drawable/ic_round_menu_open_24.xml" value="0.22135416666666666" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/drawable/ic_round_more_horiz_24.xml" value="0.22135416666666666" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/drawable/ic_round_notifications_none_24.xml" value="0.22135416666666666" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/activity_conversation.xml" value="0.2015625" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/activity_edit_profile.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/activity_find_park.xml" value="0.20520833333333333" />
-        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/activity_home.xml" value="0.25" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/activity_home.xml" value="0.4467120181405896" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/activity_login.xml" value="0.2957427536231884" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/activity_main.xml" value="0.2957427536231884" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/activity_maps.xml" value="0.20520833333333333" />
@@ -54,8 +55,15 @@
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/chat_item_left.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/confirm_layout.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/fragment_account.xml" value="0.20520833333333333" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/fragment_activity.xml" value="0.20520833333333333" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/fragment_chat.xml" value="0.2015625" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/fragment_conversation.xml" value="0.2015625" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/fragment_home.xml" value="0.20520833333333333" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/fragment_not_recieved.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/fragment_noti.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/homeitem.xml" value="0.20520833333333333" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/imageslider.xml" value="0.20520833333333333" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/item_explore.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/item_header_profile.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/item_profile.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/list_group.xml" value="0.20520833333333333" />

@@ -5,53 +5,59 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".Home.HomeActivity">
-
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:id="@+id/tabBar"
-        android:padding="5dp"
-        android:orientation="horizontal"
-        android:background="@color/green"
-        android:gravity="center">
-        <TextView
-            android:layout_width="wrap_content"
+        app:elevation="0dp"
+        android:background="@color/white">
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/title"
-            android:text="Title"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:textColor="@color/black"
-            android:visibility="gone"/>
-        <LinearLayout
-            android:layout_width="370dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:background="@drawable/background_search_box"
-            android:id="@+id/search_box"
-            android:layout_marginRight="5dp"
-            android:clickable="true">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_search_24"/>
+            android:id="@+id/toolbar"
+            android:background="@color/green">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:text="Tìm kiếm trên chợ tốt"
-                android:textColor="@color/mediumgray"
-                android:textSize="17dp"/>
-        </LinearLayout>
+                android:id="@+id/title"
+                android:text="Title"
+                android:textStyle="bold"
+                android:textSize="22dp"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                android:layout_gravity="left"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:background="@drawable/background_search_box"
+                android:id="@+id/search_box"
+                android:layout_marginRight="47dp"
+                android:clickable="true"
+                android:layout_gravity="left">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_search_24"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tìm kiếm"
+                    android:textColor="@color/mediumgray"
+                    android:textSize="17dp"/>
+            </LinearLayout>
 
-        <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:src="@drawable/ic_round_chat_24"
-            android:id="@+id/message" />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_round_chat_24"
+                android:id="@+id/message"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"/>
 
-    </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:layout_below="@+id/tabBar"

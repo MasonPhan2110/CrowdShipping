@@ -10,15 +10,15 @@
         android:icon="@drawable/ic_outline_article_24"
         android:title="Quản lý tin" />
     <item
-        android:id="@+id/pay"
+        android:id="@+id/create_post"
         android:icon="@drawable/ic_outline_border_color_24"
         android:title="Đăng tin" />
     <item
-        android:id="@+id/chat"
+        android:id="@+id/noti"
         android:icon="@drawable/ic_round_notifications_none_24"
         android:title="Thông báo" />
     <item
-        android:id="@+id/account"
+        android:id="@+id/menu"
         android:icon="@drawable/ic_round_menu_24"
         android:title="Thêm" />
 </menu>
