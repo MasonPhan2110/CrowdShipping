@@ -33,37 +33,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="@color/lightgray"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp">
-                <TextView
-                    android:padding="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Khám phá danh mục"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"/>
-                <HorizontalScrollView
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="none">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:id="@+id/explore_wrap">
-
-                    </LinearLayout>
-                </HorizontalScrollView>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/lightgray"/>
             <TextView
                 android:padding="10dp"
                 android:layout_width="wrap_content"

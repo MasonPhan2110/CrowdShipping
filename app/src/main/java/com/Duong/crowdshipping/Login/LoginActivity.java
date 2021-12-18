@@ -22,15 +22,8 @@ import com.Duong.crowdshipping.Controller.Authentication;
 import com.Duong.crowdshipping.Extend.BaseActivity;
 import com.Duong.crowdshipping.Home.HomeActivity;
 import com.Duong.crowdshipping.R;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -61,7 +54,6 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         attachKeyboardListeners();
 
-        CallbackManager callbackManager = CallbackManager.Factory.create();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
 

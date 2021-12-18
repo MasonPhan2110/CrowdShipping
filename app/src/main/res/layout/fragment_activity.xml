@@ -10,55 +10,87 @@
     android:paddingRight="10dp"
     tools:context=".fragment.ActivityFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/all_post"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginRight="5dp"
-            android:background="@color/white"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:text="Tất cả tin"
-            android:textAllCaps="false"
-            android:textColor="@color/mediumgray"
-            android:textSize="17dp"
-            android:textStyle="bold" />
+        android:scrollbars="none"
+        android:id="@+id/menuScroll">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/all_post"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/white"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:text="Tất cả tin"
+                android:textAllCaps="false"
+                android:textColor="@color/mediumgray"
+                android:textSize="17dp"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/recieved"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@color/white"
-            android:text="Tin đã được gửi"
-            android:textAllCaps="false"
-            android:textColor="@color/mediumgray"
-            android:textSize="17dp"
-            android:textStyle="bold"
-            android:layout_marginRight="5dp"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"/>
-        <Button
-            android:id="@+id/notRecieved"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@color/white"
-            android:text="Tin chưa được gửi"
-            android:textAllCaps="false"
-            android:textColor="@color/mediumgray"
-            android:textSize="17dp"
-            android:textStyle="bold"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"/>
-    </LinearLayout>
+            <Button
+                android:id="@+id/sent"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@color/white"
+                android:text="Tin đã được gửi"
+                android:textAllCaps="false"
+                android:textColor="@color/mediumgray"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:layout_marginRight="5dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"/>
+            <Button
+                android:id="@+id/notsend"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@color/white"
+                android:text="Tin chưa được gửi"
+                android:textAllCaps="false"
+                android:textColor="@color/mediumgray"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"/>
+            <Button
+                android:id="@+id/recieved"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@color/white"
+                android:text="Tin đã nhận"
+                android:textAllCaps="false"
+                android:textColor="@color/mediumgray"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"/>
+            <Button
+                android:id="@+id/completed"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@color/white"
+                android:text="Tin đã hoàn thành"
+                android:textAllCaps="false"
+                android:textColor="@color/mediumgray"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+    <!-- TODO: Update blank fragment layout -->
     <androidx.viewpager.widget.ViewPager
         android:layout_below="@+id/tabBar"
         android:id="@+id/view_pager"

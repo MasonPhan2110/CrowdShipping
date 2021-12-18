@@ -9,11 +9,11 @@ import com.Duong.crowdshipping.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link NotRecievedFragment#newInstance} factory method to
+ * Use the {@link NotSendFragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class NotRecievedFragment extends Fragment {
+public class NotSendFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,8 +33,8 @@ public class NotRecievedFragment extends Fragment {
      * @return A new instance of fragment NotRecievedFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NotRecievedFragment newInstance(String param1, String param2) {
-        NotRecievedFragment fragment = new NotRecievedFragment();
+    public static NotSendFragment newInstance(String param1, String param2) {
+        NotSendFragment fragment = new NotSendFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -42,7 +42,7 @@ public class NotRecievedFragment extends Fragment {
         return fragment;
     }
 
-    public NotRecievedFragment() {
+    public NotSendFragment() {
         // Required empty public constructor
     }
 

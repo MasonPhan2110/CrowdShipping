@@ -49,16 +49,10 @@ public class HomeFragment extends Fragment {
         sliderView.setAutoCycle(true);
         sliderView.startAutoCycle();
         linearLayout = view.findViewById(R.id.linear_layout);
-        explore_wrap = view.findViewById(R.id.explore_wrap);
-        setupExplore();
         wallHome();
         return view;
     }
 
-    private void setupExplore() {
-        ExploreAdapter exploreAdapter = new ExploreAdapter(getContext(), explore_wrap);
-        exploreAdapter.loadItem();
-    }
     private void wallHome() {
         HomeAdapter homeAdapter = new HomeAdapter(getContext(), linearLayout);
         homeAdapter.load_sales();
