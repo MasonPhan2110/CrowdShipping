@@ -11,8 +11,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.Duong.crowdshipping.R;
-import com.Duong.crowdshipping.Home.EditProfile;
-import com.Duong.crowdshipping.Home.SettingActivity;
+import com.Duong.crowdshipping.Activity.EditProfile;
+import com.Duong.crowdshipping.Activity.SettingActivity;
 
 
 public class AccountFragment extends Fragment {

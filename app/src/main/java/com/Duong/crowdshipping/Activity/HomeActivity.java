@@ -1,4 +1,4 @@
-package com.Duong.crowdshipping.Home;
+package com.Duong.crowdshipping.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,54 +7,26 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.Duong.crowdshipping.adapter.CustomExpandableListAdapter;
 import com.Duong.crowdshipping.fragment.NotiFragment;
-import com.Duong.crowdshipping.model.Cars;
-import com.Duong.crowdshipping.Login.LoginActivity;
 import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.fragment.AccountFragment;
 import com.Duong.crowdshipping.fragment.ActivityFragment;
-import com.Duong.crowdshipping.fragment.ChatFragment;
 import com.Duong.crowdshipping.fragment.HomeFragment;
-import com.Duong.crowdshipping.fragment.PayFragment;
+import com.Duong.crowdshipping.fragment.PostFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -63,6 +35,7 @@ public class HomeActivity extends AppCompatActivity {
     TextView title;
     LinearLayout searchBox;
     ImageView message;
+    MenuItem menuItem;
     private int[] selectitem = {
             R.drawable.ic_round_home_24,
             R.drawable.ic_round_article_24,
@@ -112,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new HomeFragment(), "Trang chủ");
         adapter.addFragment(new ActivityFragment(), "Quản lý tin");
-        adapter.addFragment(new PayFragment(),"Đăng tin");
+        adapter.addFragment(new PostFragment(),"Đăng tin");
         adapter.addFragment(new NotiFragment(),"Thông báo");
         adapter.addFragment(new AccountFragment(),"Thêm");
         view_pager.setAdapter(adapter);
@@ -246,7 +219,7 @@ public class HomeActivity extends AppCompatActivity {
                     searchBox.setVisibility(View.GONE);
                     title.setVisibility(View.VISIBLE);
                     title.setText("Đăng tin");
-                    navigation.getMenu().findItem(R.id.create_post).setChecked(true);
+                    navigation.getMenu().findItem(R.id.activity).setChecked(true);
                     navigation.getMenu().findItem(R.id.home).setIcon(unselectitem[0]);
                     navigation.getMenu().findItem(R.id.activity).setIcon(unselectitem[1]);
                     navigation.getMenu().findItem(R.id.create_post).setIcon(selectitem[2]);

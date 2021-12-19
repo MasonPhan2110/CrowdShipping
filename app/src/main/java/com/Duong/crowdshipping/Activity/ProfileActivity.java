@@ -1,9 +1,8 @@
-package com.Duong.crowdshipping.Home;
+package com.Duong.crowdshipping.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
 
 import com.Duong.crowdshipping.R;
 

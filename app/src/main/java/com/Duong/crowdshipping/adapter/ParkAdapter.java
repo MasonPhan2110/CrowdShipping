@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Duong.crowdshipping.R;
-import com.Duong.crowdshipping.Home.MessageActivity;
+import com.Duong.crowdshipping.Activity.MessageActivity;
 import com.Duong.crowdshipping.model.Chat;
 import com.Duong.crowdshipping.model.Parks;
 import com.google.firebase.auth.FirebaseAuth;

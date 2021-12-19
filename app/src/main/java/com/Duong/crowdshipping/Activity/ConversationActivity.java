@@ -1,4 +1,4 @@
-package com.Duong.crowdshipping.Home;
+package com.Duong.crowdshipping.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;

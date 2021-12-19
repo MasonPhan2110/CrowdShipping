@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.PostFragment"
+    android:orientation="vertical">
+
+    <TextView
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chọn danh mục tin đăng"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+    <View
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mediumgray"/>
+    <LinearLayout
+        android:id="@+id/clothes"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="7dp"
+        android:weightSum="3">
+        <ImageView
+            android:layout_weight = "0.2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/casual_tshirt"/>
+        <TextView
+            android:layout_weight = "2.7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quần áo, đồ dùng cá nhân"
+            android:textSize="17dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="7dp"/>
+        <ImageView
+            android:layout_marginLeft="2dp"
+            android:layout_weight = "0.1"
+            android:gravity="right"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_round_keyboard_arrow_right_24"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mediumgray"/>
+    <LinearLayout
+        android:id="@+id/devices"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="7dp"
+        android:weightSum="3">
+        <ImageView
+            android:layout_weight = "0.1"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/devices"/>
+        <TextView
+            android:layout_weight = "2.8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đồ điện tử"
+            android:textSize="17dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="7dp"/>
+        <ImageView
+            android:layout_marginLeft="2dp"
+            android:layout_weight = "0.1"
+            android:gravity="right"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_round_keyboard_arrow_right_24"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mediumgray"/>
+    <LinearLayout
+        android:id="@+id/office_devices"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="7dp"
+        android:weightSum="3">
+        <ImageView
+            android:layout_weight = "0.13"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/copy_machine"/>
+        <TextView
+            android:layout_weight = "2.77"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Đồ dùng văn phòng"
+            android:textSize="17dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="7dp"/>
+        <ImageView
+            android:layout_marginLeft="2dp"
+            android:layout_weight = "0.1"
+            android:gravity="right"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_round_keyboard_arrow_right_24"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mediumgray"/>
+</LinearLayout>

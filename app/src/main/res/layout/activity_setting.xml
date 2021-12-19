@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Home.SettingActivity"
+    tools:context=".Activity.SettingActivity"
     android:orientation="vertical"
     android:background="@color/lightgray">
     <com.google.android.material.appbar.AppBarLayout

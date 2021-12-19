@@ -1,26 +1,15 @@
 package com.Duong.crowdshipping.fragment;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 
 import androidx.fragment.app.Fragment;
 
 import com.Duong.crowdshipping.R;
-import com.Duong.crowdshipping.adapter.ExploreAdapter;
 import com.Duong.crowdshipping.adapter.HomeAdapter;
-import com.Duong.crowdshipping.Home.FindParkActivity;
 import com.Duong.crowdshipping.adapter.SliderAdapter;
 import com.Duong.crowdshipping.model.SliderData;
 import com.smarteist.autoimageslider.SliderView;

@@ -1,7 +1,5 @@
 package com.Duong.crowdshipping.Login;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,10 +18,8 @@ import android.widget.TextView;
 
 import com.Duong.crowdshipping.Controller.Authentication;
 import com.Duong.crowdshipping.Extend.BaseActivity;
-import com.Duong.crowdshipping.Home.HomeActivity;
+import com.Duong.crowdshipping.Activity.HomeActivity;
 import com.Duong.crowdshipping.R;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

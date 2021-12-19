@@ -1,4 +1,4 @@
-package com.Duong.crowdshipping.Home;
+package com.Duong.crowdshipping.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
