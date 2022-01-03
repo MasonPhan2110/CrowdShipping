@@ -27,27 +27,27 @@ public class PostFragment extends Fragment {
         clothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickItem(0);
+                clickItem("clothes");
             }
         });
         devices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickItem(1);
+                clickItem("devices");
             }
         });
         office_devices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickItem(2);
+                clickItem("office_devices");
             }
         });
         return view;
     }
 
-    private void clickItem(int typeID) {
+    private void clickItem(String type) {
         Intent intent = new Intent(getContext(), PostActivity.class);
-        intent.putExtra("typeID",typeID);
+        intent.putExtra("type",type);
         startActivity(intent);
     }
 }

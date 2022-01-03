@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.PostActivity"
-    android:orientation="vertical">
+    tools:context=".Activity.CreatePostActivity"
+    android:orientation="vertical"
+    android:id="@+id/linear_layout">
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,24 +19,26 @@
             android:id="@+id/toolbar"
             android:background="@color/green">
             <TextView
-                android:layout_width="350dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/title"
-                android:text="Chọn loại mặt hàng"
+                android:text="Thông tin mặt hàng"
                 android:textStyle="bold"
                 android:textSize="22dp"
                 android:textColor="@color/white"
                 android:layout_gravity="left"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/post"
+                android:text="Post"
+                android:textStyle="bold"
+                android:textSize="22dp"
+                android:textColor="@color/white"
+                android:layout_gravity="right"
+                android:clickable="true"
+                android:layout_marginRight="15dp"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/linear_layout"
-            android:orientation="vertical"/>
-    </ScrollView>
+
 </LinearLayout>
