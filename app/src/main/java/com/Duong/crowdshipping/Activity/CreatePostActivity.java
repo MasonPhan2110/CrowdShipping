@@ -1,11 +1,23 @@
 package com.Duong.crowdshipping.Activity;
 
+import static android.os.Build.VERSION_CODES.P;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,13 +25,25 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Duong.crowdshipping.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class CreatePostActivity extends AppCompatActivity {
     String type, item;
@@ -27,6 +51,8 @@ public class CreatePostActivity extends AppCompatActivity {
     LinearLayout linear_layout;
     TextView post;
     EditText addressFrom, addressTo, phoneFrom, phoneTo;
+    Button get_image;
+    List<Uri> imagePath = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +72,28 @@ public class CreatePostActivity extends AppCompatActivity {
         }
         inflater = LayoutInflater.from(CreatePostActivity.this);
         String[] payshipType = {"Người chuyển trả", "Người nhận trả"};
+        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            // There are no request codes
+                            Intent data = result.getData();
+                            if(data.getClipData() != null) {
+                                int count = data.getClipData().getItemCount();
+                                for(int i = 0; i < count; i++){
+                                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                                    imagePath.add(imageUri);
+                                    Log.d("AAAAAAAA",imagePath.toString());
+                                }
+                            }else{
+                                imagePath.add(data.getData());
+                                Log.d("AAAAAAAA",imagePath.toString());
+                            }
+                        }
+                    }
+                });
         if(type.equals("clothes")){
            switch (item){
                case "Quần áo":
@@ -68,6 +116,7 @@ public class CreatePostActivity extends AppCompatActivity {
                    addressTo = view1.findViewById(R.id.addressTo);
                    phoneFrom = view1.findViewById(R.id.phoneFrom);
                    phoneTo = view1.findViewById(R.id.phoneTo);
+                   get_image = view1.findViewById(R.id.btn_get_img);
                    ArrayAdapter watchAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,watchType);
                    ArrayAdapter shipCostAdapter1 = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,payshipType);
                    spinner_watch.setAdapter(watchAdapter);
@@ -75,21 +124,21 @@ public class CreatePostActivity extends AppCompatActivity {
                    post.setOnClickListener(new View.OnClickListener() {
                        @Override
                        public void onClick(View view) {
-                           if(addressFrom.getText().toString().matches(" ")
-                                   || addressTo.getText().toString().matches(" ")
-                                   || phoneFrom.getText().toString().matches(" ")
-                                   || phoneTo.getText().toString().matches(" "))
+                           if(addressFrom.getText().toString().matches("")
+                                   || addressTo.getText().toString().matches("")
+                                   || phoneFrom.getText().toString().matches("")
+                                   || phoneTo.getText().toString().matches(""))
                            {
-                               AlertDialog.Builder builder = new AlertDialog.Builder(CreatePostActivity.this);
-                               builder.setMessage("Bạn cần điền đầy đủ các thông tin!").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                   @Override
-                                   public void onClick(DialogInterface dialogInterface, int i) {
-
-                                   }
-                               }).show();
+                               Toast.makeText(CreatePostActivity.this,"Error",Toast.LENGTH_SHORT).show();
                            }else {
                                postClick(type, item);
                            }
+                       }
+                   });
+                   get_image.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View view) {
+                           getImage(someActivityResultLauncher);
                        }
                    });
                    linear_layout.addView(view1);
@@ -113,10 +162,61 @@ public class CreatePostActivity extends AppCompatActivity {
                    break;
            }
         }
+
+    }
+
+    private void getImage(ActivityResultLauncher<Intent> someActivityResultLauncher) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        someActivityResultLauncher.launch(intent);
     }
 
     private void postClick(String type, String item) {
-        Toast.makeText(CreatePostActivity.this,type+item,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(CreatePostActivity.this,type+item,Toast.LENGTH_SHORT).show();
+        ProgressDialog progressDialog
+                = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading "+ imagePath.size()+" image ...");
+        progressDialog.show();
 
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+
+        for(int i =0; i<imagePath.size();i++){
+            StorageReference storageReference = storage.getReferenceFromUrl("gs://crowdshipping-387fa.appspot.com").child("images/"
+                    + UUID.randomUUID().toString());
+            storageReference.putFile(imagePath.get(i)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    Toast.makeText(CreatePostActivity.this,
+                                    "Image Uploaded!!",
+                                    Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(CreatePostActivity.this,
+                                    "Failed " + e.getMessage(),
+                                    Toast.LENGTH_SHORT)
+                            .show();
+                    Log.d("AAAAAAAAAAAA", e.getMessage());
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                    double progress
+                            = (100.0
+                            * snapshot.getBytesTransferred()
+                            / snapshot.getTotalByteCount());
+                    progressDialog.setMessage(
+                            "Uploaded "
+                                    + (int)progress + "%");
+                }
+            });
+        }
     }
 }
