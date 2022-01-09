@@ -36,12 +36,17 @@ import android.widget.Toast;
 import com.Duong.crowdshipping.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,6 +58,9 @@ public class CreatePostActivity extends AppCompatActivity {
     EditText addressFrom, addressTo, phoneFrom, phoneTo;
     Button get_image;
     List<Uri> imagePath = new ArrayList<>();
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+    String userid = firebaseUser.getUid();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +139,15 @@ public class CreatePostActivity extends AppCompatActivity {
                            {
                                Toast.makeText(CreatePostActivity.this,"Error",Toast.LENGTH_SHORT).show();
                            }else {
-                               postClick(type, item);
+                               postClick(type,
+                                       item,
+                                       addressFrom.getText().toString(),
+                                       addressTo.getText().toString(),
+                                       phoneFrom.getText().toString(),
+                                       phoneTo.getText().toString(),
+                                       spinner_watch.getSelectedItem().toString(),
+                                       spinner_ship_cost_watch.getSelectedItem().toString()
+                                       );
                            }
                        }
                    });
@@ -173,16 +189,22 @@ public class CreatePostActivity extends AppCompatActivity {
         someActivityResultLauncher.launch(intent);
     }
 
-    private void postClick(String type, String item) {
+    private void postClick(String type, String item, String addressFrom,String addressTo,String phoneFrom,String phoneTo,String spinnerType,String spinnerShip) {
         //Toast.makeText(CreatePostActivity.this,type+item,Toast.LENGTH_SHORT).show();
         ProgressDialog progressDialog
                 = new ProgressDialog(this);
         progressDialog.setTitle("Uploading "+ imagePath.size()+" image ...");
         progressDialog.show();
-
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(type).child(item);
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("CreateID",userid);
+        hashMap.put("AddressFrom",addressFrom);
+        hashMap.put("AddressTo",addressTo);
+        hashMap.put("phoneFrom",phoneFrom);
+        hashMap.put("phoneTo",phoneTo);
+        hashMap.put("Type",spinnerType);
+        hashMap.put("Ship",spinnerShip);
         FirebaseStorage storage = FirebaseStorage.getInstance();
-
-
         for(int i =0; i<imagePath.size();i++){
             StorageReference storageReference = storage.getReferenceFromUrl("gs://crowdshipping-387fa.appspot.com").child("images/"
                     + UUID.randomUUID().toString());
@@ -190,10 +212,6 @@ public class CreatePostActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
                     progressDialog.dismiss();
-                    Toast.makeText(CreatePostActivity.this,
-                                    "Image Uploaded!!",
-                                    Toast.LENGTH_SHORT)
-                            .show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
