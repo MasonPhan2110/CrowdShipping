@@ -34,8 +34,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Duong.crowdshipping.R;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -58,6 +61,7 @@ public class CreatePostActivity extends AppCompatActivity {
     EditText addressFrom, addressTo, phoneFrom, phoneTo;
     Button get_image;
     List<Uri> imagePath = new ArrayList<>();
+    HashMap<String, Object> imageURI = new HashMap<>();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     String userid = firebaseUser.getUid();
@@ -99,6 +103,15 @@ public class CreatePostActivity extends AppCompatActivity {
                                 imagePath.add(data.getData());
                                 Log.d("AAAAAAAA",imagePath.toString());
                             }
+                            new AlertDialog.Builder(CreatePostActivity.this)
+                                    .setTitle("Thông báo")
+                                    .setMessage("Bạn đã gửi lên " +imagePath.size() +" ảnh")
+
+                                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                                    // The dialog is automatically dismissed when a dialog button is clicked.
+                                    // A null listener allows the button to dismiss the dialog and take no further action.
+                                    .setNegativeButton(android.R.string.yes, null)
+                                    .show();
                         }
                     }
                 });
@@ -125,6 +138,7 @@ public class CreatePostActivity extends AppCompatActivity {
                    phoneFrom = view1.findViewById(R.id.phoneFrom);
                    phoneTo = view1.findViewById(R.id.phoneTo);
                    get_image = view1.findViewById(R.id.btn_get_img);
+
                    ArrayAdapter watchAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,watchType);
                    ArrayAdapter shipCostAdapter1 = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,payshipType);
                    spinner_watch.setAdapter(watchAdapter);
@@ -191,50 +205,60 @@ public class CreatePostActivity extends AppCompatActivity {
 
     private void postClick(String type, String item, String addressFrom,String addressTo,String phoneFrom,String phoneTo,String spinnerType,String spinnerShip) {
         //Toast.makeText(CreatePostActivity.this,type+item,Toast.LENGTH_SHORT).show();
-        ProgressDialog progressDialog
-                = new ProgressDialog(this);
-        progressDialog.setTitle("Uploading "+ imagePath.size()+" image ...");
-        progressDialog.show();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(type).child(item);
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("CreateID",userid);
-        hashMap.put("AddressFrom",addressFrom);
-        hashMap.put("AddressTo",addressTo);
-        hashMap.put("phoneFrom",phoneFrom);
-        hashMap.put("phoneTo",phoneTo);
-        hashMap.put("Type",spinnerType);
-        hashMap.put("Ship",spinnerShip);
+        final ProgressDialog pd = new ProgressDialog(CreatePostActivity.this);
+        pd.setMessage("Uploading...");
+        pd.show();
+
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        for(int i =0; i<imagePath.size();i++){
+        for(int i =0; i<imagePath.size();i++) {
             StorageReference storageReference = storage.getReferenceFromUrl("gs://crowdshipping-387fa.appspot.com").child("images/"
                     + UUID.randomUUID().toString());
-            storageReference.putFile(imagePath.get(i)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            int finalI = i;
+            storageReference.putFile((imagePath.get(i))).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @NonNull
                 @Override
-                public void onSuccess(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                    progressDialog.dismiss();
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return storageReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadURI = task.getResult();
+                        String mURI = downloadURI.toString();
+                        imageURI.put("Image" + finalI, mURI);
+
+                    }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
-                    Toast.makeText(CreatePostActivity.this,
-                                    "Failed " + e.getMessage(),
-                                    Toast.LENGTH_SHORT)
-                            .show();
-                    Log.d("AAAAAAAAAAAA", e.getMessage());
-                }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                    double progress
-                            = (100.0
-                            * snapshot.getBytesTransferred()
-                            / snapshot.getTotalByteCount());
-                    progressDialog.setMessage(
-                            "Uploaded "
-                                    + (int)progress + "%");
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    pd.dismiss();
                 }
             });
         }
+        if(imageURI.size()!=0){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(type).child(item);
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("CreateID",userid);
+            hashMap.put("AddressFrom",addressFrom);
+            hashMap.put("AddressTo",addressTo);
+            hashMap.put("phoneFrom",phoneFrom);
+            hashMap.put("phoneTo",phoneTo);
+            hashMap.put("Type",spinnerType);
+            hashMap.put("Ship",spinnerShip);
+            hashMap.put("linkImage",imageURI);
+            reference.push().setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    pd.dismiss();
+                }
+            });
+        }
+
     }
 }
