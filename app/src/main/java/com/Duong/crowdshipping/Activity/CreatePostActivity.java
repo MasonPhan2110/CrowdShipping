@@ -188,7 +188,7 @@ public class CreatePostActivity extends AppCompatActivity {
                    View view2 = inflater.inflate(R.layout.layout_clothes_shoes,linear_layout,false);
                    String[] shoesType = {"Giày nam", "Giày nữ","Giày cao gót"};
                    Spinner spinner_ship_cost_shoes = view2.findViewById(R.id.drop_down_ship_cost);
-                   Spinner spinner2 = view2.findViewById((R.id.drop_down_watch));
+                   Spinner spinner2 = view2.findViewById((R.id.drop_down_shoes));
                    ArrayAdapter shoesAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,shoesType);
                    ArrayAdapter shipCostAdapter2 = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,payshipType);
                    spinner2.setAdapter(shoesAdapter);
