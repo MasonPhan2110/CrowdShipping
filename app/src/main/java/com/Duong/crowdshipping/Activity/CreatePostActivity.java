@@ -47,11 +47,21 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.smarteist.autoimageslider.Transformations.CubeInRotationTransformation;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 public class CreatePostActivity extends AppCompatActivity {
     String type, item;
@@ -119,7 +129,7 @@ public class CreatePostActivity extends AppCompatActivity {
            switch (item){
                case "Quần áo":
                    View view = inflater.inflate(R.layout.layout_clothes_watch,linear_layout,false);
-                   String[] clothesType = {"Đồng hồ cơ", "Đồng hồ điện tử","Đồng hồ thông minh"};
+                   String[] clothesType = {"Váy", "Quần áo nam","Quàn áo nữ"};
                    Spinner spinner = view.findViewById((R.id.drop_down_watch));
                    Spinner spinner_ship_cost_clothes = view.findViewById(R.id.drop_down_ship_cost);
                    ArrayAdapter clothesAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
@@ -208,7 +218,6 @@ public class CreatePostActivity extends AppCompatActivity {
         final ProgressDialog pd = new ProgressDialog(CreatePostActivity.this);
         pd.setMessage("Uploading...");
         pd.show();
-
         FirebaseStorage storage = FirebaseStorage.getInstance();
         for(int i =0; i<imagePath.size();i++) {
             StorageReference storageReference = storage.getReferenceFromUrl("gs://crowdshipping-387fa.appspot.com").child("images/"
@@ -230,7 +239,9 @@ public class CreatePostActivity extends AppCompatActivity {
                         Uri downloadURI = task.getResult();
                         String mURI = downloadURI.toString();
                         imageURI.put("Image" + finalI, mURI);
-
+                        if(finalI+1==imagePath.size()){
+                            postToDatabase(pd,type,item,addressFrom,addressTo,phoneFrom,phoneTo,spinnerType,spinnerShip);
+                        }
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -241,24 +252,44 @@ public class CreatePostActivity extends AppCompatActivity {
                 }
             });
         }
-        if(imageURI.size()!=0){
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(type).child(item);
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("CreateID",userid);
-            hashMap.put("AddressFrom",addressFrom);
-            hashMap.put("AddressTo",addressTo);
-            hashMap.put("phoneFrom",phoneFrom);
-            hashMap.put("phoneTo",phoneTo);
-            hashMap.put("Type",spinnerType);
-            hashMap.put("Ship",spinnerShip);
-            hashMap.put("linkImage",imageURI);
-            reference.push().setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    pd.dismiss();
-                }
-            });
-        }
 
+    }
+    private void postToDatabase(ProgressDialog pd,String type, String item, String addressFrom,String addressTo,String phoneFrom,String phoneTo,String spinnerType,String spinnerShip){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(type).child(item);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+        String currentDateandTime = sdf.format(new Date());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("CreateID",userid);
+        hashMap.put("AddressFrom",addressFrom);
+        hashMap.put("AddressTo",addressTo);
+        hashMap.put("phoneFrom",phoneFrom);
+        hashMap.put("phoneTo",phoneTo);
+        hashMap.put("Type",spinnerType);
+        hashMap.put("Ship",spinnerShip);
+        hashMap.put("linkImage",imageURI);
+        hashMap.put("Time", currentDateandTime);
+        reference.push().setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                pd.dismiss();
+                new AlertDialog.Builder(CreatePostActivity.this)
+                        .setTitle("Thông báo")
+                        .setMessage("Tạo đơn hàng thành công")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(CreatePostActivity.this, HomeActivity.class);
+                                CreatePostActivity.this.finish();
+                                intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                startActivity(intent);
+                            }
+                        })
+                        .show();
+            }
+        });
     }
 }
