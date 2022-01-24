@@ -128,9 +128,9 @@ public class CreatePostActivity extends AppCompatActivity {
         if(type.equals("clothes")){
            switch (item){
                case "Quần áo":
-                   View view = inflater.inflate(R.layout.layout_clothes_watch,linear_layout,false);
+                   View view = inflater.inflate(R.layout.layout_clothes_clothes,linear_layout,false);
                    String[] clothesType = {"Váy", "Quần áo nam","Quàn áo nữ"};
-                   Spinner spinner = view.findViewById((R.id.drop_down_watch));
+                   Spinner spinner = view.findViewById((R.id.drop_down_clothes));
                    Spinner spinner_ship_cost_clothes = view.findViewById(R.id.drop_down_ship_cost);
                    ArrayAdapter clothesAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
                    ArrayAdapter shipCostAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
@@ -185,7 +185,7 @@ public class CreatePostActivity extends AppCompatActivity {
                    break;
                case "Giày dép":
                    Log.d("Testtttttttttttttt", item);
-                   View view2 = inflater.inflate(R.layout.layout_clothes_watch,linear_layout,false);
+                   View view2 = inflater.inflate(R.layout.layout_clothes_shoes,linear_layout,false);
                    String[] shoesType = {"Giày nam", "Giày nữ","Giày cao gót"};
                    Spinner spinner_ship_cost_shoes = view2.findViewById(R.id.drop_down_ship_cost);
                    Spinner spinner2 = view2.findViewById((R.id.drop_down_watch));

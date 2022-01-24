@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upload ảnh món hàng"
+                android:background="@drawable/backgroundgg"
+                android:padding="7dp"
+                android:textSize="16dp"
+                android:textAllCaps="false"
+                android:id="@+id/btn_get_img"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="From:"
+                android:textColor="@color/black"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"/>
+            <EditText
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/addressFrom"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Nhập địa chỉ món hàng"
+                android:padding="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số điện thoại người gửi:"
+                android:textColor="@color/black"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"/>
+            <EditText
+                android:background="@drawable/backgroundgg"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Nhập số điện thoại người gửi"
+                android:padding="5dp"
+                android:id="@+id/phoneFrom"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="To:"
+                android:textColor="@color/black"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"/>
+            <EditText
+                android:background="@drawable/backgroundgg"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Nhập địa chỉ người nhận hàng:"
+                android:padding="5dp"
+                android:id="@+id/addressTo"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số điện thoại người nhận:"
+                android:textColor="@color/black"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"/>
+            <EditText
+                android:background="@drawable/backgroundgg"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Nhập số điện thoại người nhận:"
+                android:padding="5dp"
+                android:id="@+id/phoneTo"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chọn loại giầy dép:"
+                android:textColor="@color/black"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"/>
+            <Spinner
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/drop_down_clothes"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chọn người trả tiền ship:"
+                android:textColor="@color/black"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"/>
+            <Spinner
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/drop_down_ship_cost"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
