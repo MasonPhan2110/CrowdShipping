@@ -7,18 +7,49 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.Duong.crowdshipping.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class HomeAdapter {
     Context mcontext;
     LayoutInflater inflater;
     LinearLayout linearLayout;
+    DatabaseReference reference;
     public HomeAdapter(Context mcontext, LinearLayout linearLayout){
         this.mcontext = mcontext;
         this.linearLayout = linearLayout;
     }
     public void load_sales(){
         inflater = LayoutInflater.from(mcontext);
+        reference = FirebaseDatabase.getInstance().getReference("Post");
+        reference.child("clothes").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        reference.child("devices").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         for(int i = 0; i<30;i++){
             View view = inflater.inflate(R.layout.homeitem,linearLayout,false);
             ImageView sale1, sale2;
