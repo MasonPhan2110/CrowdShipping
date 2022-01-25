@@ -132,10 +132,42 @@ public class CreatePostActivity extends AppCompatActivity {
                    String[] clothesType = {"Váy", "Quần áo nam","Quàn áo nữ"};
                    Spinner spinner = view.findViewById((R.id.drop_down_clothes));
                    Spinner spinner_ship_cost_clothes = view.findViewById(R.id.drop_down_ship_cost);
+                   addressFrom = view.findViewById(R.id.addressFrom);
+                   addressTo = view.findViewById(R.id.addressTo);
+                   phoneFrom = view.findViewById(R.id.phoneTo);
+                   get_image = view.findViewById(R.id.btn_get_img);
                    ArrayAdapter clothesAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
                    ArrayAdapter shipCostAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
                    spinner.setAdapter(clothesAdapter);
                    spinner_ship_cost_clothes.setAdapter(shipCostAdapter);
+                   post.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View view) {
+                           if(addressFrom.getText().toString().matches("")
+                                   || addressTo.getText().toString().matches("")
+                                   || phoneFrom.getText().toString().matches("")
+                                   || phoneTo.getText().toString().matches(""))
+                           {
+                               Toast.makeText(CreatePostActivity.this,"Error",Toast.LENGTH_SHORT).show();
+                           }else {
+                               postClick(type,
+                                       item,
+                                       addressFrom.getText().toString(),
+                                       addressTo.getText().toString(),
+                                       phoneFrom.getText().toString(),
+                                       phoneTo.getText().toString(),
+                                       spinner.getSelectedItem().toString(),
+                                       spinner_ship_cost_clothes.getSelectedItem().toString()
+                               );
+                           }
+                       }
+                   });
+                   get_image.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View view) {
+                           getImage(someActivityResultLauncher);
+                       }
+                   });
                    linear_layout.addView(view);
                    break;
                case "Đồng hồ":
@@ -189,10 +221,44 @@ public class CreatePostActivity extends AppCompatActivity {
                    String[] shoesType = {"Giày nam", "Giày nữ","Giày cao gót"};
                    Spinner spinner_ship_cost_shoes = view2.findViewById(R.id.drop_down_ship_cost);
                    Spinner spinner2 = view2.findViewById((R.id.drop_down_shoes));
+                   addressFrom = view2.findViewById(R.id.addressFrom);
+                   addressTo = view2.findViewById(R.id.addressTo);
+                   phoneFrom = view2.findViewById(R.id.phoneFrom);
+                   phoneTo = view2.findViewById(R.id.phoneTo);
+                   get_image = view2.findViewById(R.id.btn_get_img);
+
                    ArrayAdapter shoesAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,shoesType);
                    ArrayAdapter shipCostAdapter2 = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,payshipType);
                    spinner2.setAdapter(shoesAdapter);
                    spinner_ship_cost_shoes.setAdapter(shipCostAdapter2);
+                   post.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View view) {
+                           if(addressFrom.getText().toString().matches("")
+                                   || addressTo.getText().toString().matches("")
+                                   || phoneFrom.getText().toString().matches("")
+                                   || phoneTo.getText().toString().matches(""))
+                           {
+                               Toast.makeText(CreatePostActivity.this,"Error",Toast.LENGTH_SHORT).show();
+                           }else {
+                               postClick(type,
+                                       item,
+                                       addressFrom.getText().toString(),
+                                       addressTo.getText().toString(),
+                                       phoneFrom.getText().toString(),
+                                       phoneTo.getText().toString(),
+                                       spinner2.getSelectedItem().toString(),
+                                       spinner_ship_cost_shoes.getSelectedItem().toString()
+                               );
+                           }
+                       }
+                   });
+                   get_image.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View view) {
+                           getImage(someActivityResultLauncher);
+                       }
+                   });
                    linear_layout.addView(view2);
                    break;
                case "Túi xách":
@@ -201,6 +267,100 @@ public class CreatePostActivity extends AppCompatActivity {
                default:
                    break;
            }
+        }
+        else if(type.equals("devices")){
+            switch (item){
+                case "Điện thoại":
+                    View view = inflater.inflate(R.layout.layout_clothes_clothes,linear_layout,false);
+                    String[] clothesType = {"Váy", "Quần áo nam","Quàn áo nữ"};
+                    Spinner spinner = view.findViewById((R.id.drop_down_clothes));
+                    Spinner spinner_ship_cost_clothes = view.findViewById(R.id.drop_down_ship_cost);
+                    addressFrom = view.findViewById(R.id.addressFrom);
+                    addressTo = view.findViewById(R.id.addressTo);
+                    phoneFrom = view.findViewById(R.id.phoneTo);
+                    get_image = view.findViewById(R.id.btn_get_img);
+                    ArrayAdapter clothesAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
+                    ArrayAdapter shipCostAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
+                    spinner.setAdapter(clothesAdapter);
+                    spinner_ship_cost_clothes.setAdapter(shipCostAdapter);
+                    post.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(addressFrom.getText().toString().matches("")
+                                    || addressTo.getText().toString().matches("")
+                                    || phoneFrom.getText().toString().matches("")
+                                    || phoneTo.getText().toString().matches(""))
+                            {
+                                Toast.makeText(CreatePostActivity.this,"Error",Toast.LENGTH_SHORT).show();
+                            }else {
+                                postClick(type,
+                                        item,
+                                        addressFrom.getText().toString(),
+                                        addressTo.getText().toString(),
+                                        phoneFrom.getText().toString(),
+                                        phoneTo.getText().toString(),
+                                        spinner.getSelectedItem().toString(),
+                                        spinner_ship_cost_clothes.getSelectedItem().toString()
+                                );
+                            }
+                        }
+                    });
+                    get_image.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getImage(someActivityResultLauncher);
+                        }
+                    });
+                    linear_layout.addView(view);
+                    break;
+                case "Máy tính bảng":
+                    View view1 = inflater.inflate(R.layout.layout_clothes_watch,linear_layout,false);
+                    String[] watchType = {"Đồng hồ cơ", "Đồng hồ điện tử","Đồng hồ thông minh"};
+                    Spinner spinner_watch = view1.findViewById((R.id.drop_down_watch));
+                    Spinner spinner_ship_cost_watch = view1.findViewById(R.id.drop_down_ship_cost);
+                    addressFrom = view1.findViewById(R.id.addressFrom);
+                    addressTo = view1.findViewById(R.id.addressTo);
+                    phoneFrom = view1.findViewById(R.id.phoneFrom);
+                    phoneTo = view1.findViewById(R.id.phoneTo);
+                    get_image = view1.findViewById(R.id.btn_get_img);
+
+                    ArrayAdapter watchAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,watchType);
+                    ArrayAdapter shipCostAdapter1 = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,payshipType);
+                    spinner_watch.setAdapter(watchAdapter);
+                    spinner_ship_cost_watch.setAdapter(shipCostAdapter1);
+                    post.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(addressFrom.getText().toString().matches("")
+                                    || addressTo.getText().toString().matches("")
+                                    || phoneFrom.getText().toString().matches("")
+                                    || phoneTo.getText().toString().matches(""))
+                            {
+                                Toast.makeText(CreatePostActivity.this,"Error",Toast.LENGTH_SHORT).show();
+                            }else {
+                                postClick(type,
+                                        item,
+                                        addressFrom.getText().toString(),
+                                        addressTo.getText().toString(),
+                                        phoneFrom.getText().toString(),
+                                        phoneTo.getText().toString(),
+                                        spinner_watch.getSelectedItem().toString(),
+                                        spinner_ship_cost_watch.getSelectedItem().toString()
+                                );
+                            }
+                        }
+                    });
+                    get_image.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            getImage(someActivityResultLauncher);
+                        }
+                    });
+                    linear_layout.addView(view1);
+                    break;
+                default:
+                    break;
+            }
         }
 
     }
