@@ -81,6 +81,8 @@
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/item_explore.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/item_header_profile.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/item_post.xml" value="0.18" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/item_post_home.xml" value="0.35643115942028986" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/item_post_home_header.xml" value="0.35144927536231885" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/item_profile.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/layout_clothes_clothes.xml" value="0.4665718349928876" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/layout_clothes_shoes.xml" value="0.26403985507246375" />
@@ -90,6 +92,7 @@
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/park_item.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/popup_book_parking.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/section_header.xml" value="0.20520833333333333" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/section_item.xml" value="0.35643115942028986" />
       </map>
     </option>
   </component>

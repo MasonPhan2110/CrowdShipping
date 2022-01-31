@@ -415,7 +415,7 @@ public class CreatePostActivity extends AppCompatActivity {
 
     }
     private void postToDatabase(ProgressDialog pd,String type, String item, String addressFrom,String addressTo,String phoneFrom,String phoneTo,String spinnerType,String spinnerShip){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(type).child(item);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
         String currentDateandTime = sdf.format(new Date());
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -424,7 +424,8 @@ public class CreatePostActivity extends AppCompatActivity {
         hashMap.put("AddressTo",addressTo);
         hashMap.put("phoneFrom",phoneFrom);
         hashMap.put("phoneTo",phoneTo);
-        hashMap.put("Type",spinnerType);
+        hashMap.put("Type",type +"-"+ item);
+        hashMap.put("Description", spinnerType);
         hashMap.put("Ship",spinnerShip);
         hashMap.put("linkImage",imageURI);
         hashMap.put("Time", currentDateandTime);

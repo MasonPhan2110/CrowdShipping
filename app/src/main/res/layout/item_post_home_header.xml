@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.smarteist.autoimageslider.SliderView
+        android:id="@+id/slider"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:sliderAnimationDuration="600"
+        app:sliderAutoCycleDirection="back_and_forth"
+        app:sliderIndicatorAnimationDuration="600"
+        app:sliderIndicatorEnabled="true"
+        app:sliderIndicatorGravity="center_horizontal|bottom"
+        app:sliderIndicatorOrientation="horizontal"
+        app:sliderIndicatorRadius="1dp"
+        app:sliderIndicatorSelectedColor="@color/green"
+        app:sliderIndicatorUnselectedColor="@color/lightgray"
+        app:sliderScrollTimeInSec="1" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/lightgray"/>
+    <TextView
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Tin đăng dành cho bạn"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+</LinearLayout>

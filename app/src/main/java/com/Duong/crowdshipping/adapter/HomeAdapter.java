@@ -3,78 +3,108 @@ package com.Duong.crowdshipping.adapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.Duong.crowdshipping.R;
+import com.Duong.crowdshipping.model.Post;
+import com.Duong.crowdshipping.model.SliderData;
+import com.android.volley.Header;
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.smarteist.autoimageslider.SliderView;
 
-public class HomeAdapter {
-    Context mcontext;
-    LayoutInflater inflater;
-    LinearLayout linearLayout;
-    DatabaseReference reference;
-    public HomeAdapter(Context mcontext, LinearLayout linearLayout){
+import java.util.ArrayList;
+import java.util.List;
+
+public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private Context mcontext;
+    private List<Post> mPost;
+    ArrayList<SliderData> sliderDataArrayList;
+
+    public HomeAdapter(Context mcontext, List<Post> mPost, ArrayList<SliderData> sliderDataArrayList){
         this.mcontext = mcontext;
-        this.linearLayout = linearLayout;
+        this.mPost = mPost;
+        this.sliderDataArrayList = sliderDataArrayList;
     }
-    public void load_sales(){
-        inflater = LayoutInflater.from(mcontext);
-        reference = FirebaseDatabase.getInstance().getReference("Post");
-        reference.child("clothes").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-            }
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if(viewType == 1){
+            View view = LayoutInflater.from(mcontext).inflate(R.layout.item_post_home_header, parent, false);
+            return new HeaderViewHolder(view);
+        }else{
+            View view = LayoutInflater.from(mcontext).inflate(R.layout.item_post_home, parent, false);
+            return  new ViewHolder(view);
+        }
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if(holder instanceof HeaderViewHolder){
+            final HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+            SliderAdapter adapter = new SliderAdapter( sliderDataArrayList);
+            headerViewHolder.sliderView.setAutoCycleDirection(SliderView.LAYOUT_DIRECTION_LTR);
+            headerViewHolder.sliderView.setSliderAdapter(adapter);
+            headerViewHolder.sliderView.setScrollTimeInSec(3);
+            headerViewHolder.sliderView.setAutoCycle(true);
+            headerViewHolder.sliderView.startAutoCycle();
+        }else if(holder instanceof ViewHolder){
+            final ViewHolder itemHolder = (ViewHolder) holder;
+            Post post = mPost.get(position-1);
+            String img = post.getLinkImage().get("Image0").toString();
+            holder.setIsRecyclable(false);
+            Glide.with(mcontext).load(img).into(itemHolder.image);
+        }
+    }
 
-            }
-        });
-        reference.child("devices").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+    @Override
+    public int getItemViewType(int position) {
+        if(position == 0){
+            return viewType.Header;
+        }
+        return viewType.Normal;
+    }
 
-            }
+    @Override
+    public int getItemCount() {
+        return 0;
+    }
+    private class viewType{
+        public static  final int Header =1;
+        public static final int Normal = 2;
+        public static final int Footer = 3;
+    }
+    public  class ViewHolder extends RecyclerView.ViewHolder{
+        ImageView image;
+        TextView type,from,to,time;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            image = itemView.findViewById(R.id.image);
+            type = itemView.findViewById(R.id.type);
+            from = itemView.findViewById(R.id.from);
+            to = itemView.findViewById(R.id.to);
+            time = itemView.findViewById(R.id.time);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        for(int i = 0; i<30;i++){
-            View view = inflater.inflate(R.layout.homeitem,linearLayout,false);
-            ImageView sale1, sale2;
-            TextView name_sale1, name_sale2, time1, time2;
-            LinearLayout linear1 , linear2;
-            sale1 = view.findViewById(R.id.sale1);
-            sale2 = view.findViewById(R.id.sale2);
-            name_sale1 = view.findViewById(R.id.name_sale1);
-            name_sale2 = view.findViewById(R.id.name_sale2);
-            time1 = view.findViewById(R.id.time1);
-            time2 = view.findViewById(R.id.time2);
-            linear1 = view.findViewById(R.id.linear1);
-            linear2 = view.findViewById(R.id.linear2);
-
-            final int height = mcontext.getResources().getDisplayMetrics().heightPixels;
-            final int width = mcontext.getResources().getDisplayMetrics().widthPixels;
-            float dp = 10;
-            float density = mcontext.getResources().getDisplayMetrics().density;
-            int pixel = (int)(dp * density);
-            int size = (width - 3 * pixel)/2 ;
-            linear1.getLayoutParams().width = size;
-            linear2.getLayoutParams().width = size;
-            sale1.getLayoutParams().height = size;
-            sale2.getLayoutParams().height = size;
-            linearLayout.addView(view);
+        }
+    }
+    public class HeaderViewHolder extends  RecyclerView.ViewHolder{
+        SliderView sliderView;
+        public HeaderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            sliderView = itemView.findViewById(R.id.slider);
         }
     }
 }
