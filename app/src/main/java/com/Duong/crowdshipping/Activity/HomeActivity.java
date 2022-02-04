@@ -36,6 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     LinearLayout searchBox;
     ImageView message;
     MenuItem menuItem;
+    HomeActivityListener homeActivityBackPress;
     private int[] selectitem = {
             R.drawable.ic_round_home_24,
             R.drawable.ic_round_article_24,
@@ -255,4 +256,25 @@ public class HomeActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    public void onAttachFragment(@NonNull Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if(fragment instanceof HomeActivityListener){
+            homeActivityBackPress = (HomeActivityListener) fragment;
+        }
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        homeActivityBackPress = null;
+    }
+
+    public interface HomeActivityListener{
+        void backpress();
+    }
+    void backpress(){
+        homeActivityBackPress.backpress();
+    }
 }

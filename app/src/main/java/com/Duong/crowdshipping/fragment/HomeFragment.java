@@ -10,9 +10,11 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.Duong.crowdshipping.Activity.HomeActivity;
 import com.Duong.crowdshipping.Controller.EndlessRecycleViewScrollListener;
 import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.adapter.HomeAdapter;
@@ -30,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements HomeActivity.HomeActivityListener {
     private EndlessRecycleViewScrollListener scrollListener;
     String url1 = "https://thumbs.dreamstime.com/z/crowdshipping-smartphone-screen-refreshing-background-209089346.jpg";
     String url2 = "https://thumbs.dreamstime.com/b/crowdshipping-text-truck-driving-keyboard-key-conceptual-d-rendering-computer-209759394.jpg";
@@ -39,13 +41,13 @@ public class HomeFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     RecyclerView recycle_view;
     SwipeRefreshLayout refresh;
-    List<Post> mPost;
+    List<Post> mPost = new ArrayList<>();
+    HomeAdapter homeAdapter;
+    ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
-        SliderView sliderView = view.findViewById(R.id.slider);
         sliderDataArrayList.add(new SliderData(url1));
         sliderDataArrayList.add(new SliderData(url2));
         sliderDataArrayList.add(new SliderData(url3));
@@ -91,30 +93,65 @@ public class HomeFragment extends Fragment {
     }
 
     private void wallHome() {
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Post");
+        reference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mPost.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Post post = dataSnapshot.getValue(Post.class);
+                    mPost.add(post);
+                }
+                Collections.reverse(mPost);
+                homeAdapter = new HomeAdapter(getContext(), mPost, sliderDataArrayList);
+                recycle_view.setAdapter(homeAdapter);
+                recycle_view.addOnScrollListener(scrollListener);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
     private void loadNextDataFromApi(final int page) {
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
-//        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                List<Home> homeList = new ArrayList<>();
-//                homeList.clear();
-//                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
-//                    Home home = dataSnapshot.getValue(Home.class);
-//                    home.setId(dataSnapshot.getKey());
-//                    homeList.add(home);
-//                }
-//                Collections.reverse(homeList);
-//                for(int i =0;i<homeList.size();i++){
-//                    mhome.add(homeList.get(i));
-//                }
-//                homeAdapter.notifyDataSetChanged();
-//                Log.e("CCC", String.valueOf(page));
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//            }
-//        });
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Post> postList = new ArrayList<>();
+                postList.clear();
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    Post post = dataSnapshot.getValue(Post.class);
+                    postList.add(post);
+                }
+                Collections.reverse(postList);
+                for(int i =0;i<postList.size();i++){
+                    mPost.add(postList.get(i));
+                }
+                homeAdapter.notifyDataSetChanged();
+                Log.e("CCC", String.valueOf(page));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
+
+    @Override
+    public void backpress() {
+        if(linearLayoutManager.findFirstVisibleItemPosition() != 0)
+        {
+            RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()){
+                @Override
+                protected int getVerticalSnapPreference() {
+                    return super.getVerticalSnapPreference();
+                }
+            };
+            smoothScroller.setTargetPosition(0);
+            linearLayoutManager.startSmoothScroll(smoothScroller);
+        }else{
+            getActivity().finishAffinity();
+        }
+    }
+
 }

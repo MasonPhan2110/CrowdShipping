@@ -1,6 +1,7 @@
 package com.Duong.crowdshipping.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,12 +68,18 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String img = post.getLinkImage().get("Image0").toString();
             holder.setIsRecyclable(false);
             Glide.with(mcontext).load(img).into(itemHolder.image);
+            itemHolder.from.setText("Từ: "+post.getAddressFrom());
+            itemHolder.to.setText("Đến: " +post.getAddressTo());
+            itemHolder.type.setText("Loại hàng hóa: "+post.getType());
+            itemHolder.time.setText(post.getTime());
         }
     }
 
     @Override
     public int getItemViewType(int position) {
+
         if(position == 0){
+            Log.d("MPOST", String.valueOf(position));
             return viewType.Header;
         }
         return viewType.Normal;
@@ -80,7 +87,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mPost.size()+1;
     }
     private class viewType{
         public static  final int Header =1;
@@ -97,7 +104,6 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             from = itemView.findViewById(R.id.from);
             to = itemView.findViewById(R.id.to);
             time = itemView.findViewById(R.id.time);
-
         }
     }
     public class HeaderViewHolder extends  RecyclerView.ViewHolder{
