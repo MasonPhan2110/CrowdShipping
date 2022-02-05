@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -44,10 +45,12 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
     List<Post> mPost = new ArrayList<>();
     HomeAdapter homeAdapter;
     ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
+    ProgressBar pBar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        ProgressBar pgsBar = view.findViewById(R.id.pBar);
         sliderDataArrayList.add(new SliderData(url1));
         sliderDataArrayList.add(new SliderData(url2));
         sliderDataArrayList.add(new SliderData(url3));
@@ -64,7 +67,7 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
                 loadNextDataFromApi(page);
             }
         };
-        wallHome();
+        wallHome(pgsBar);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -92,7 +95,7 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
         return view;
     }
 
-    private void wallHome() {
+    private void wallHome(ProgressBar pgsBar) {
         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Post");
         reference1.addValueEventListener(new ValueEventListener() {
             @Override
@@ -102,6 +105,7 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
                     Post post = dataSnapshot.getValue(Post.class);
                     mPost.add(post);
                 }
+                pgsBar.setVisibility(View.GONE);
                 Collections.reverse(mPost);
                 homeAdapter = new HomeAdapter(getContext(), mPost, sliderDataArrayList);
                 recycle_view.setAdapter(homeAdapter);
@@ -153,5 +157,4 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
             getActivity().finishAffinity();
         }
     }
-
 }

@@ -1,6 +1,7 @@
 package com.Duong.crowdshipping.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.Duong.crowdshipping.Activity.DetailPostActivity;
 import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.model.Post;
 import com.Duong.crowdshipping.model.SliderData;
@@ -26,8 +28,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.smarteist.autoimageslider.SliderView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mcontext;
@@ -67,11 +73,70 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Post post = mPost.get(position-1);
             String img = post.getLinkImage().get("Image0").toString();
             holder.setIsRecyclable(false);
+            String[] type = post.getType().split("-");
+            String[] time = post.getTime().split("_");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+            String currentDateandTime = sdf.format(new Date());
+            String[] currentTime = currentDateandTime.split("_");
+            String timeSubtract = " ";
+            if(time[0] == currentTime[0]){
+                SimpleDateFormat dateFormat = new SimpleDateFormat("HHmmss");
+                try {
+                    Date datePost = dateFormat.parse(time[1]);
+                    Date datenow = dateFormat.parse(currentTime[1]);
+                    long diff = datenow.getTime() - datePost.getTime();
+                    int timeinSecond = (int) (diff/1000);
+                    int hours, minutes, seconds;
+                    hours = timeinSecond / 3600;
+                    timeinSecond = timeinSecond - (hours * 3600);
+                    minutes = timeinSecond / 60;
+                    timeinSecond = timeinSecond - (minutes * 60);
+                    seconds = timeinSecond;
+                    if(hours == 0){
+                        if(minutes == 0){
+                            timeSubtract="Vừa xong";
+                        }else{
+                            timeSubtract = minutes + " m";
+                        }
+                    }else{
+                        timeSubtract = hours + " h";
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }else{
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+                try{
+                    Date datePost = dateFormat.parse(time[0]);
+                    Date datenow = dateFormat.parse(currentTime[0]);
+                    Log.d("Timenow", datenow+"-"+datePost);
+                    long diff = datenow.getTime() - datePost.getTime();
+                    int timeinSecond = (int) (diff/1000);
+                    int hours, day;
+                    hours = timeinSecond / 3600;
+                    day = hours/24;
+                    if(day<=1){
+                        timeSubtract = day+" day";
+                    }
+                    else{
+                        timeSubtract = day+" days";
+                    }
+                }catch(ParseException e) {
+                    e.printStackTrace();
+                }
+            }
             Glide.with(mcontext).load(img).into(itemHolder.image);
             itemHolder.from.setText("Từ: "+post.getAddressFrom());
             itemHolder.to.setText("Đến: " +post.getAddressTo());
-            itemHolder.type.setText("Loại hàng hóa: "+post.getType());
-            itemHolder.time.setText(post.getTime());
+            itemHolder.type.setText("Loại hàng hóa: "+type[1]);
+            itemHolder.time.setText(timeSubtract);
+            itemHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mcontext, DetailPostActivity.class);
+                    mcontext.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -97,6 +162,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public  class ViewHolder extends RecyclerView.ViewHolder{
         ImageView image;
         TextView type,from,to,time;
+        LinearLayout linearLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.image);
@@ -104,6 +170,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             from = itemView.findViewById(R.id.from);
             to = itemView.findViewById(R.id.to);
             time = itemView.findViewById(R.id.time);
+            linearLayout = itemView.findViewById(R.id.linearLayout);
         }
     }
     public class HeaderViewHolder extends  RecyclerView.ViewHolder{

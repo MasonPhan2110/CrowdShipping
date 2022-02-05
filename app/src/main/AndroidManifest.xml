@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activity.DetailPostActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.CreatePostActivity"
             android:exported="true" />
         <activity
