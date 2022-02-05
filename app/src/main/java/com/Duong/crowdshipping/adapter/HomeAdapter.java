@@ -26,6 +26,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
 import java.text.ParseException;
@@ -67,6 +69,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             headerViewHolder.sliderView.setSliderAdapter(adapter);
             headerViewHolder.sliderView.setScrollTimeInSec(3);
             headerViewHolder.sliderView.setAutoCycle(true);
+            headerViewHolder.sliderView.setSliderTransformAnimation(SliderAnimations.CUBEINDEPTHTRANSFORMATION);
+            headerViewHolder.sliderView.setIndicatorAnimation(IndicatorAnimationType.SWAP);
             headerViewHolder.sliderView.startAutoCycle();
         }else if(holder instanceof ViewHolder){
             final ViewHolder itemHolder = (ViewHolder) holder;
@@ -134,6 +138,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mcontext, DetailPostActivity.class);
+                    intent.putExtra("ImageLink", post.getLinkImage());
+                    intent.putExtra("Type", post.getType());
                     mcontext.startActivity(intent);
                 }
             });
