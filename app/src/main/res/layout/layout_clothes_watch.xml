@@ -28,6 +28,38 @@
                 android:textSize="17dp"
                 android:textStyle="bold"
                 android:layout_marginTop="7dp"/>
+            <Spinner
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/dropdown_cityFrom"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+            <Spinner
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/dropdown_districtFrom"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+            <Spinner
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/dropdown_wardsFrom"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+            <Spinner
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/dropdown_streetFrom"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
             <EditText
                 android:background="@drawable/backgroundgg"
                 android:id="@+id/addressFrom"
@@ -35,10 +67,11 @@
                 android:layout_height="50dp"
                 android:hint="Nhập địa chỉ món hàng"
                 android:padding="5dp"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Số điện thoại người gửi:"
+                android:text="Số điện thoại người gửi"
                 android:textColor="@color/black"
                 android:textSize="17dp"
                 android:textStyle="bold"
@@ -58,11 +91,43 @@
                 android:textSize="17dp"
                 android:textStyle="bold"
                 android:layout_marginTop="7dp"/>
+            <Spinner
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/dropdown_cityTo"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+            <Spinner
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/dropdown_districtTo"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+            <Spinner
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/dropdown_wardsTo"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+            <Spinner
+                android:background="@drawable/backgroundgg"
+                android:id="@+id/dropdown_streetTo"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:spinnerMode="dropdown"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
             <EditText
                 android:background="@drawable/backgroundgg"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:hint="Nhập địa chỉ người nhận hàng:"
+                android:hint="Nhập địa chỉ người nhận hàng"
                 android:padding="5dp"
                 android:id="@+id/addressTo"/>
             <TextView

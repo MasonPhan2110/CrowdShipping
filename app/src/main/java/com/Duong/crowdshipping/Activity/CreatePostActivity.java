@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Duong.crowdshipping.R;
+import com.Duong.crowdshipping.model.City;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,8 +48,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.smarteist.autoimageslider.Transformations.CubeInRotationTransformation;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,6 +81,8 @@ public class CreatePostActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     String userid = firebaseUser.getUid();
+    String jsonFileString = null;
+    List<City> city = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +102,15 @@ public class CreatePostActivity extends AppCompatActivity {
         }
         inflater = LayoutInflater.from(CreatePostActivity.this);
         String[] payshipType = {"Người chuyển trả", "Người nhận trả"};
+
+        jsonFileString = loadJson();
+        Gson gson = new Gson();
+        Type listCityType = new TypeToken<List<City>>() {}.getType();
+        city = gson.fromJson(jsonFileString,listCityType);
+//        for (int i = 0; i < city.size(); i++) {
+//            Log.d("DataTest", "> Item " + i + "\n" + city.get(i).getName());
+//        }
+
         ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -363,6 +380,22 @@ public class CreatePostActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    private String loadJson() {
+        String json = null;
+        try {
+            InputStream is = getAssets().open("local.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
     private void getImage(ActivityResultLauncher<Intent> someActivityResultLauncher) {
