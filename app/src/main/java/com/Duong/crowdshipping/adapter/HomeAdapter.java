@@ -30,6 +30,7 @@ import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnima
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -140,6 +141,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Intent intent = new Intent(mcontext, DetailPostActivity.class);
                     intent.putExtra("ImageLink", post.getLinkImage());
                     intent.putExtra("Type", post.getType());
+                    intent.putExtra("Post", (Serializable) post);
                     mcontext.startActivity(intent);
                 }
             });

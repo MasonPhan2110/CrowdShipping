@@ -1,8 +1,9 @@
 package com.Duong.crowdshipping.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Post {
+public class Post implements Serializable {
     private String CreateID;
     private HashMap<String, Object> linkImage;
     private String AddressFrom;

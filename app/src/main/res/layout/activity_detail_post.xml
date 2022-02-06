@@ -1,25 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.DetailPostActivity"
-    android:orientation="vertical">
+    tools:context=".Activity.DetailPostActivity">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tabBar"
+        app:elevation="0dp"
+        android:background="@color/white">
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar"
+            android:background="@color/green"
+            app:theme="@style/Theme.MyFancyTheme">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/title"
+                android:text="Chi tiết đơn hàng"
+                android:textStyle="bold"
+                android:textSize="22dp"
+                android:textColor="@color/white"
+                android:layout_gravity="center" />
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
     <ProgressBar
+        android:layout_below="@id/tabBar"
         android:padding="180dp"
         android:id="@+id/pBar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </ProgressBar>
-        <ScrollView
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nhận đơn"
+        android:textAlignment="center"
+        android:textSize="21dp"
+        android:padding="5dp"
+        android:textStyle="bold"
+        android:background="@drawable/background_btn_green"
+        android:layout_margin="15dp"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tabBar">
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-        </ScrollView>
-</LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
+
+
+</RelativeLayout>

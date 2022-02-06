@@ -1,11 +1,14 @@
 package com.Duong.crowdshipping.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,6 +17,7 @@ import android.widget.ProgressBar;
 
 import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.adapter.DetailPostAdapter;
+import com.Duong.crowdshipping.model.Post;
 import com.Duong.crowdshipping.model.SliderData;
 
 import java.util.ArrayList;
@@ -26,6 +30,18 @@ public class DetailPostActivity extends AppCompatActivity {
     ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
     HashMap<String, Object> linkImage;
     String type;
+    Toolbar toolbar;
+    Post post;
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +57,17 @@ public class DetailPostActivity extends AppCompatActivity {
         window.setNavigationBarColor(DetailPostActivity.this.getResources().getColor(android.R.color.white));
         linearLayout = findViewById(R.id.linearLayout);
         ProgressBar pgsBar = findViewById(R.id.pBar);
+        toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setMinimumHeight(toolbar.getHeight());
         Intent intent = getIntent();
         linkImage = (HashMap<String, Object>) intent.getSerializableExtra("ImageLink");
         type = intent.getStringExtra("Type");
+        post = (Post) intent.getSerializableExtra("Post");
         for(Object i:linkImage.values()){
             Log.d("getValues", "onCreate: "+i.toString());
             sliderDataArrayList.add(new SliderData(i.toString()));
@@ -56,7 +80,7 @@ public class DetailPostActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
-        DetailPostAdapter detailPostAdapter = new DetailPostAdapter(linearLayout, DetailPostActivity.this, sliderDataArrayList, type);
+        DetailPostAdapter detailPostAdapter = new DetailPostAdapter(linearLayout, DetailPostActivity.this, sliderDataArrayList, post);
         detailPostAdapter.loadDetailPost(width);
         pgsBar.setVisibility(View.GONE);
     }
