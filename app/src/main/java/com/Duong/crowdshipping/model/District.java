@@ -4,15 +4,15 @@ import java.util.List;
 
 public class District {
     String id, name;
-    List<wards> Wards;
-    List<streets> Streets;
+    List<wards> wards;
+    List<streets> streets;
 
     public List<streets> getStreets() {
-        return Streets;
+        return streets;
     }
 
     public void setStreets(List<streets> streets) {
-        Streets = streets;
+        this.streets = streets;
     }
 
     public String getId() {
@@ -32,10 +32,10 @@ public class District {
     }
 
     public List<wards> getWards() {
-        return Wards;
+        return wards;
     }
 
     public void setWards(List<wards> wards) {
-        Wards = wards;
+        this.wards = wards;
     }
 }

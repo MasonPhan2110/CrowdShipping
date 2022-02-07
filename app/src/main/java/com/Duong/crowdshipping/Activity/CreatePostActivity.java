@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 
 import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.model.City;
+import com.Duong.crowdshipping.model.District;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,6 +51,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.smarteist.autoimageslider.Transformations.CubeInRotationTransformation;
 
@@ -83,6 +88,8 @@ public class CreatePostActivity extends AppCompatActivity {
     String userid = firebaseUser.getUid();
     String jsonFileString = null;
     List<City> city = new ArrayList<>();
+    List<District> districts = new ArrayList<>();
+    String[] cityName, districtName, wardsName, streetName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,10 +113,14 @@ public class CreatePostActivity extends AppCompatActivity {
         jsonFileString = loadJson();
         Gson gson = new Gson();
         Type listCityType = new TypeToken<List<City>>() {}.getType();
+        Type listDistrictType = new TypeToken<List<District>>() {}.getType();
         city = gson.fromJson(jsonFileString,listCityType);
-//        for (int i = 0; i < city.size(); i++) {
-//            Log.d("DataTest", "> Item " + i + "\n" + city.get(i).getName());
-//        }
+        cityName = new String[city.size()];
+        for (int i = 0; i < city.size(); i++) {
+            //districts = city.get(i).getDistricts();
+            Log.i("DataTest", "> Item " + i + "\n" + city.get(i).getDistricts().get(0).getName());
+            cityName[i] = city.get(i).getName();
+        }
 
         ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -147,6 +158,7 @@ public class CreatePostActivity extends AppCompatActivity {
                case "Quần áo":
                    View view = inflater.inflate(R.layout.layout_clothes_clothes,linear_layout,false);
                    String[] clothesType = {"Váy", "Quần áo nam","Quàn áo nữ"};
+
                    Spinner spinner = view.findViewById((R.id.drop_down_clothes));
                    Spinner spinner_ship_cost_clothes = view.findViewById(R.id.drop_down_ship_cost);
                    addressFrom = view.findViewById(R.id.addressFrom);
@@ -190,6 +202,15 @@ public class CreatePostActivity extends AppCompatActivity {
                case "Đồng hồ":
                    View view1 = inflater.inflate(R.layout.layout_clothes_watch,linear_layout,false);
                    String[] watchType = {"Đồng hồ cơ", "Đồng hồ điện tử","Đồng hồ thông minh"};
+                   Spinner spinner_watch_cityFrom = view1.findViewById(R.id.dropdown_cityFrom);
+                   Spinner spinner_watch_cityTo = view1.findViewById(R.id.dropdown_cityTo);
+                   Spinner spinner_watch_districtFrom = view1.findViewById(R.id.dropdown_districtFrom);
+                   Spinner spinner_watch_districtTo = view1.findViewById(R.id.dropdown_districtTo);
+                   Spinner spinner_watch_wardsFrom = view1.findViewById(R.id.dropdown_wardsFrom);
+                   Spinner spinner_watch_wardsTo = view1.findViewById(R.id.dropdown_wardsTo);
+                   Spinner spinner_watch_streetFrom = view1.findViewById(R.id.dropdown_streetFrom);
+                   Spinner spinner_watch_streetTo = view1.findViewById(R.id.dropdown_streetTo);
+
                    Spinner spinner_watch = view1.findViewById((R.id.drop_down_watch));
                    Spinner spinner_ship_cost_watch = view1.findViewById(R.id.drop_down_ship_cost);
                    addressFrom = view1.findViewById(R.id.addressFrom);
@@ -198,10 +219,120 @@ public class CreatePostActivity extends AppCompatActivity {
                    phoneTo = view1.findViewById(R.id.phoneTo);
                    get_image = view1.findViewById(R.id.btn_get_img);
 
+
                    ArrayAdapter watchAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,watchType);
                    ArrayAdapter shipCostAdapter1 = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,payshipType);
+                   ArrayAdapter spinner_watch_city_adapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item, cityName);
+
                    spinner_watch.setAdapter(watchAdapter);
                    spinner_ship_cost_watch.setAdapter(shipCostAdapter1);
+                   spinner_watch_cityFrom.setAdapter(spinner_watch_city_adapter);
+                   spinner_watch_cityTo.setAdapter(spinner_watch_city_adapter);
+
+                   spinner_watch_cityFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                       @Override
+                       public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                           for(int a = 0;a<city.size();a++){
+                               if(spinner_watch_cityFrom.getSelectedItem().toString()==city.get(a).getName()){
+                                   districtName = new String[city.get(a).getDistricts().size()];
+                                   for(int j = 0;j<city.get(a).getDistricts().size();j++){
+                                       districtName[j] = city.get(a).getDistricts().get(j).getName();
+                                   }
+                                   ArrayAdapter spinner_watch_district_adapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item, districtName);
+                                   spinner_watch_districtFrom.setAdapter(spinner_watch_district_adapter);
+                               }
+                           }
+                       }
+
+                       @Override
+                       public void onNothingSelected(AdapterView<?> adapterView) {
+
+                       }
+                   });
+                   spinner_watch_districtFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                       @Override
+                       public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                           for(int a = 0; a<city.size();a++){
+                               if(spinner_watch_cityFrom.getSelectedItem().toString() == city.get(a).getName()){
+                                   for(int b = 0;b<city.get(a).getDistricts().size();b++){
+                                       if(spinner_watch_districtFrom.getSelectedItem().toString() == city.get(a).getDistricts().get(b).getName()){
+                                           wardsName = new String[city.get(a).getDistricts().get(b).getWards().size()];
+                                           streetName = new String[city.get(a).getDistricts().get(b).getStreets().size()];
+                                           for(int c = 0;c<city.get(a).getDistricts().get(b).getWards().size();c++){
+                                               wardsName[c] = city.get(a).getDistricts().get(b).getWards().get(c).getName();
+                                           }
+                                           for(int c = 0;c<city.get(a).getDistricts().get(b).getStreets().size();c++){
+                                               streetName[c] = city.get(a).getDistricts().get(b).getStreets().get(c).getName();
+                                           }
+                                           ArrayAdapter spinner_watch_wards_adapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item, wardsName);
+                                           spinner_watch_wardsFrom.setAdapter(spinner_watch_wards_adapter);
+                                           ArrayAdapter spinner_watch_street_adapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item, streetName);
+                                           spinner_watch_streetFrom.setAdapter(spinner_watch_street_adapter);
+                                       }
+                                   }
+                               }
+                           }
+                       }
+
+                       @Override
+                       public void onNothingSelected(AdapterView<?> adapterView) {
+
+                       }
+                   });
+                   spinner_watch_cityTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                       @Override
+                       public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                           Log.d("CitySelected", city.get(i).getName());
+                           for(int a = 0;a<city.size();a++){
+                               if(spinner_watch_cityTo.getSelectedItem().toString()==city.get(a).getName()){
+                                   districtName = new String[city.get(a).getDistricts().size()];
+                                   for(int j = 0;j<city.get(a).getDistricts().size();j++){
+                                       districtName[j] = city.get(a).getDistricts().get(j).getName();
+                                   }
+                                   ArrayAdapter spinner_watch_district_adapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item, districtName);
+                                   spinner_watch_districtTo.setAdapter(spinner_watch_district_adapter);
+                               }
+                           }
+                       }
+
+                       @Override
+                       public void onNothingSelected(AdapterView<?> adapterView) {
+
+                       }
+                   });
+                   spinner_watch_districtTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                       @Override
+                       public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                           for(int a = 0; a<city.size();a++){
+                               if(spinner_watch_cityTo.getSelectedItem().toString() == city.get(a).getName()){
+                                   for(int b = 0;b<city.get(a).getDistricts().size();b++){
+                                       if(spinner_watch_districtTo.getSelectedItem().toString() == city.get(a).getDistricts().get(b).getName()){
+                                           wardsName = new String[city.get(a).getDistricts().get(b).getWards().size()];
+                                           streetName = new String[city.get(a).getDistricts().get(b).getStreets().size()];
+                                           for(int c = 0;c<city.get(a).getDistricts().get(b).getWards().size();c++){
+                                               wardsName[c] = city.get(a).getDistricts().get(b).getWards().get(c).getName();
+                                           }
+                                           for(int c = 0;c<city.get(a).getDistricts().get(b).getStreets().size();c++){
+                                               streetName[c] = city.get(a).getDistricts().get(b).getStreets().get(c).getName();
+                                           }
+                                           ArrayAdapter spinner_watch_wards_adapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item, wardsName);
+                                           spinner_watch_wardsTo.setAdapter(spinner_watch_wards_adapter);
+                                           ArrayAdapter spinner_watch_street_adapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item, streetName);
+                                           spinner_watch_streetTo.setAdapter(spinner_watch_street_adapter);
+                                       }
+                                   }
+                               }
+                           }
+                       }
+
+                       @Override
+                       public void onNothingSelected(AdapterView<?> adapterView) {
+
+                       }
+                   });
+//                   ArrayAdapter spinner_watch_district_adapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item, districtName);
+//                   spinner_watch_districtFrom.setAdapter(spinner_watch_district_adapter);
+//                   spinner_watch_districtTo.setAdapter(spinner_watch_district_adapter);
                    post.setOnClickListener(new View.OnClickListener() {
                        @Override
                        public void onClick(View view) {

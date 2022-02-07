@@ -1,10 +1,12 @@
 package com.Duong.crowdshipping.model;
 
+import com.google.gson.JsonArray;
+
 import java.util.List;
 
 public class City {
     String id, code,name;
-    List<District> Districts;
+    List<District> districts;
 
     public String getId() {
         return id;
@@ -31,10 +33,10 @@ public class City {
     }
 
     public List<District> getDistricts() {
-        return Districts;
+        return districts;
     }
 
     public void setDistricts(List<District> districts) {
-        Districts = districts;
+        this.districts = districts;
     }
 }
