@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.adapter.DetailPostAdapter;
@@ -32,6 +33,7 @@ public class DetailPostActivity extends AppCompatActivity {
     String type;
     Toolbar toolbar;
     Post post;
+    TextView getPost;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -58,17 +60,16 @@ public class DetailPostActivity extends AppCompatActivity {
         linearLayout = findViewById(R.id.linearLayout);
         ProgressBar pgsBar = findViewById(R.id.pBar);
         toolbar = findViewById(R.id.toolbar);
-
+        getPost = findViewById(R.id.getPost);
+//        getPost.bringToFront();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setMinimumHeight(toolbar.getHeight());
         Intent intent = getIntent();
-        linkImage = (HashMap<String, Object>) intent.getSerializableExtra("ImageLink");
-        type = intent.getStringExtra("Type");
         post = (Post) intent.getSerializableExtra("Post");
-        for(Object i:linkImage.values()){
+        for(Object i:post.getLinkImage().values()){
             Log.d("getValues", "onCreate: "+i.toString());
             sliderDataArrayList.add(new SliderData(i.toString()));
         }

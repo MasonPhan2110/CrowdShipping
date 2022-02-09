@@ -1,14 +1,15 @@
 package com.Duong.crowdshipping.model;
 
 public class Users {
-    private String username, email, phone, vehicle, plate;
+    private String username, email, phone,id;
 
-    public Users(String username, String email, String phone, String vehicle, String plate) {
+
+
+    public Users(String username, String email, String phone, String id) {
         this.username = username;
         this.email = email;
         this.phone = phone;
-        this.vehicle = vehicle;
-        this.plate = plate;
+        this.id = id;
     }
     public Users(){
 
@@ -36,20 +37,11 @@ public class Users {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
-    public String getVehicle() {
-        return vehicle;
+    public String getId() {
+        return id;
     }
 
-    public void setVehicle(String vehicle) {
-        this.vehicle = vehicle;
-    }
-
-    public String getPlate() {
-        return plate;
-    }
-
-    public void setPlate(String plate) {
-        this.plate = plate;
+    public void setId(String id) {
+        this.id = id;
     }
 }

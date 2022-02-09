@@ -12,7 +12,7 @@ import com.Duong.crowdshipping.R;
 
 import java.util.List;
 
-public class ParkActivityAdapter {
+public class PostSentAdapter {
     Context mcontext;
     LayoutInflater inflater;
     LinearLayout linearLayout;
@@ -20,7 +20,7 @@ public class ParkActivityAdapter {
     List<String> list;
     private Boolean collapse = true;
 
-    public ParkActivityAdapter(Context mcontext, LinearLayout linearLayout, String header, List<String> list) {
+    public PostSentAdapter(Context mcontext, LinearLayout linearLayout, String header, List<String> list) {
         this.mcontext = mcontext;
         this.linearLayout = linearLayout;
         this.header = header;

@@ -90,6 +90,8 @@ public class ActivityFragment extends Fragment {
         sent.setClickable(false);
         all_post.setClickable(true);
         notsend.setClickable(true);
+        recieved.setClickable(true);
+        completed.setClickable(true);
     }
 
     private void all_activity_click() {
@@ -107,6 +109,8 @@ public class ActivityFragment extends Fragment {
         all_post.setClickable(false);
         sent.setClickable(true);
         notsend.setClickable(true);
+        recieved.setClickable(true);
+        completed.setClickable(true);
     }
     private void notsend_click(){
         recieved.setBackgroundColor(Color.TRANSPARENT);
@@ -123,6 +127,8 @@ public class ActivityFragment extends Fragment {
         all_post.setClickable(true);
         sent.setClickable(true);
         notsend.setClickable(false);
+        recieved.setClickable(true);
+        completed.setClickable(true);
     }
     private void recieved_click(){
         sent.setBackgroundColor(Color.TRANSPARENT);
@@ -135,10 +141,12 @@ public class ActivityFragment extends Fragment {
         recieved.setTextColor(getResources().getColor(R.color.green));
         all_post.setBackgroundColor(Color.TRANSPARENT);
         all_post.setTextColor(getResources().getColor(R.color.mediumgray));
-        view_pager.setCurrentItem(2);
+        view_pager.setCurrentItem(3);
         all_post.setClickable(true);
         sent.setClickable(true);
-        notsend.setClickable(false);
+        notsend.setClickable(true);
+        recieved.setClickable(false);
+        completed.setClickable(true);
     }
     private void completed_click(){
         sent.setBackgroundColor(Color.TRANSPARENT);
@@ -151,10 +159,12 @@ public class ActivityFragment extends Fragment {
         completed.setTextColor(getResources().getColor(R.color.green));
         all_post.setBackgroundColor(Color.TRANSPARENT);
         all_post.setTextColor(getResources().getColor(R.color.mediumgray));
-        view_pager.setCurrentItem(2);
+        view_pager.setCurrentItem(4);
         all_post.setClickable(true);
         sent.setClickable(true);
-        notsend.setClickable(false);
+        notsend.setClickable(true);
+        recieved.setClickable(true);
+        completed.setClickable(false);
     }
 
     private void setupbtn() {
@@ -165,7 +175,7 @@ public class ActivityFragment extends Fragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
         adapter.addFrag(new AllActivityFragment(), "Trang chủ");
-        adapter.addFrag(new ParkActivityFragment(), "Quản lý tin");
+        adapter.addFrag(new PostSentFragment(), "Quản lý tin");
         adapter.addFrag(new NotSendFragment(),"Chưa gửi");
         adapter.addFrag(new NotSendFragment(),"Đã nhận");
         adapter.addFrag(new NotSendFragment(),"Đã hoàn thành");

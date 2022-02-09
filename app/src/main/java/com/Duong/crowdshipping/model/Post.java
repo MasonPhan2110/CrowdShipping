@@ -6,16 +6,17 @@ import java.util.HashMap;
 public class Post implements Serializable {
     private String CreateID;
     private HashMap<String, Object> linkImage;
-    private String AddressFrom;
-    private String AddressTo;
+    private HashMap<String,String> AddressFrom;
+    private HashMap<String,String> AddressTo;
     private String phoneFrom;
     private String phoneTo;
     private String Type;
     private String Description;
     private String Ship;
     private String Time;
+    private String PostID;
 
-    public Post(String CreateID,HashMap<String, Object> linkImage,String AddressFrom,String AddressTo,String phoneFrom,String phoneTo,String Type,String Description,String Ship,String Time){
+    public Post(String CreateID,HashMap<String, Object> linkImage,HashMap<String,String> AddressFrom,HashMap<String,String> AddressTo,String phoneFrom,String phoneTo,String Type,String Description,String Ship,String Time, String PostID){
         this.CreateID= CreateID;
         this.linkImage= linkImage;
         this.AddressFrom= AddressFrom;
@@ -26,8 +27,17 @@ public class Post implements Serializable {
         this.Description= Description;
         this.Ship= Ship;
         this.Time= Time;
+        this.PostID = PostID;
     }
     public Post() {
+    }
+
+    public String getPostID() {
+        return PostID;
+    }
+
+    public void setPostID(String postID) {
+        PostID = postID;
     }
 
     public String getCreateID() {
@@ -46,19 +56,19 @@ public class Post implements Serializable {
         this.linkImage = linkImage;
     }
 
-    public String getAddressFrom() {
+    public HashMap<String,String> getAddressFrom() {
         return AddressFrom;
     }
 
-    public void setAddressFrom(String addressFrom) {
+    public void setAddressFrom(HashMap<String,String> addressFrom) {
         AddressFrom = addressFrom;
     }
 
-    public String getAddressTo() {
+    public HashMap<String,String> getAddressTo() {
         return AddressTo;
     }
 
-    public void setAddressTo(String addressTo) {
+    public void setAddressTo(HashMap<String,String> addressTo) {
         AddressTo = addressTo;
     }
 

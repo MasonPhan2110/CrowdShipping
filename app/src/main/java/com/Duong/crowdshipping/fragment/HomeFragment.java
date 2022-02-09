@@ -22,6 +22,8 @@ import com.Duong.crowdshipping.adapter.HomeAdapter;
 import com.Duong.crowdshipping.adapter.SliderAdapter;
 import com.Duong.crowdshipping.model.Post;
 import com.Duong.crowdshipping.model.SliderData;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +48,7 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
     HomeAdapter homeAdapter;
     ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
     ProgressBar pBar;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,7 +81,9 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                             Post post = dataSnapshot.getValue(Post.class);
-                            mPost.add(post);
+                            if(!user.getUid().equals(post.getCreateID())){
+                                mPost.add(post);
+                            }
                         }
                         Collections.reverse(mPost);
                         recycle_view.getAdapter().notifyDataSetChanged();
@@ -103,7 +108,9 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
                 mPost.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Post post = dataSnapshot.getValue(Post.class);
-                    mPost.add(post);
+                    if(!user.getUid().equals(post.getCreateID())){
+                        mPost.add(post);
+                    }
                 }
                 pgsBar.setVisibility(View.GONE);
                 Collections.reverse(mPost);
@@ -126,14 +133,15 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
                 postList.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Post post = dataSnapshot.getValue(Post.class);
-                    postList.add(post);
+                    if(!user.getUid().equals(post.getCreateID())){
+                        postList.add(post);
+                    }
                 }
                 Collections.reverse(postList);
                 for(int i =0;i<postList.size();i++){
                     mPost.add(postList.get(i));
                 }
                 homeAdapter.notifyDataSetChanged();
-                Log.e("CCC", String.valueOf(page));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

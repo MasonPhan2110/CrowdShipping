@@ -71,8 +71,6 @@ public class EditProfile extends AppCompatActivity {
                 name.setText(user.getUsername());
                 phone.setText(user.getPhone());
                 email.setText(user.getEmail());
-                vehicles.setText(user.getVehicle());
-                plates.setText(user.getPlate());
             }
 
             @Override
