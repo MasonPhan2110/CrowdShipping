@@ -54,7 +54,7 @@ public class SentPostAdapter extends   RecyclerView.Adapter<RecyclerView.ViewHol
         }else{
             itemHolder.text_no_post.setVisibility(View.GONE);
             itemHolder.linear1.setVisibility(View.VISIBLE);
-            Post post = mPost.get(position-1);
+            Post post = mPost.get(position);
             String img = post.getLinkImage().get("Image0").toString();
             holder.setIsRecyclable(false);
             String[] type = post.getType().split("-");
@@ -129,6 +129,9 @@ public class SentPostAdapter extends   RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
+        if(mPost.size() == 0){
+            return 1;
+        }
         return mPost.size();
     }
 

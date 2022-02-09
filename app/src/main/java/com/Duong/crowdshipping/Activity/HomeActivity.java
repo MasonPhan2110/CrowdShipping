@@ -57,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         int flag = HomeActivity.this.getWindow().getDecorView().getSystemUiVisibility();
-        flag |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+//        flag |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
         HomeActivity.this.getWindow().getDecorView().setSystemUiVisibility(flag);
         Window window = HomeActivity.this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
