@@ -1,9 +1,11 @@
 package com.Duong.crowdshipping.Activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -15,11 +17,20 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.adapter.DetailPostAdapter;
 import com.Duong.crowdshipping.model.Post;
 import com.Duong.crowdshipping.model.SliderData;
+import com.Duong.crowdshipping.model.Users;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +45,7 @@ public class DetailPostActivity extends AppCompatActivity {
     Toolbar toolbar;
     Post post;
     TextView getPost;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -74,6 +86,35 @@ public class DetailPostActivity extends AppCompatActivity {
             sliderDataArrayList.add(new SliderData(i.toString()));
         }
         wallDetailPost(pgsBar);
+        getPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getPostclick();
+            }
+        });
+    }
+
+    private void getPostclick() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                if(users.getIdImg()==null){
+                    new AlertDialog.Builder(DetailPostActivity.this)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("Thông báo")
+                            .setMessage("Bạn chưa cập nhật ảnh chứng minh thư nhân dân (căn cước công dân). Vui lòng cập nhật ảnh trong Profile để có thể nhận đơn.")
+                            .setPositiveButton("Ok", null)
+                            .show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void wallDetailPost(ProgressBar pgsBar) {

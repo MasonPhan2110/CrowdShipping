@@ -24,7 +24,7 @@ import java.util.List;
 
 
 public class ActivityFragment extends Fragment {
-    Button all_post, sent, notsend, recieved, completed;
+    Button sent,recieved, completed;
     int i = 0;
     ViewPager view_pager;
     HorizontalScrollView menuScroll;
@@ -32,33 +32,21 @@ public class ActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_activity, container, false);
-        all_post = view.findViewById(R.id.all_post);
         sent = view.findViewById(R.id.sent);
-        notsend = view.findViewById(R.id.notsend);
         recieved = view.findViewById(R.id.recieved);
         completed = view.findViewById(R.id.completed);
         view_pager = view.findViewById(R.id.view_pager);
         menuScroll = view.findViewById(R.id.menuScroll);
         setupViewPager(view_pager);
         setupbtn();
-        all_post.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                all_activity_click();
-            }
-        });
+
         sent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                park_activity_click();
+                sentClick();
             }
         });
-        notsend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                notsend_click();
-            }
-        });
+
         recieved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,108 +63,50 @@ public class ActivityFragment extends Fragment {
         return view;
     }
 
-    private void park_activity_click() {
+    private void sentClick() {
         recieved.setBackgroundColor(Color.TRANSPARENT);
         recieved.setTextColor(getResources().getColor(R.color.mediumgray));
         completed.setBackgroundColor(Color.TRANSPARENT);
         completed.setTextColor(getResources().getColor(R.color.mediumgray));
-        all_post.setBackgroundColor(Color.TRANSPARENT);
-        all_post.setTextColor(getResources().getColor(R.color.mediumgray));
         sent.setBackgroundResource(background_btn_activity);
         sent.setTextColor(getResources().getColor(R.color.green));
-        notsend.setBackgroundColor(Color.TRANSPARENT);
-        notsend.setTextColor(getResources().getColor(R.color.mediumgray));
-        view_pager.setCurrentItem(1);
-        sent.setClickable(false);
-        all_post.setClickable(true);
-        notsend.setClickable(true);
-        recieved.setClickable(true);
-        completed.setClickable(true);
-    }
-
-    private void all_activity_click() {
-        sent.setBackgroundColor(Color.TRANSPARENT);
-        sent.setTextColor(getResources().getColor(R.color.mediumgray));
-        all_post.setBackgroundResource(background_btn_activity);
-        all_post.setTextColor(getResources().getColor(R.color.green));
-        notsend.setBackgroundColor(Color.TRANSPARENT);
-        notsend.setTextColor(getResources().getColor(R.color.mediumgray));
-        recieved.setBackgroundColor(Color.TRANSPARENT);
-        recieved.setTextColor(getResources().getColor(R.color.mediumgray));
-        completed.setBackgroundColor(Color.TRANSPARENT);
-        completed.setTextColor(getResources().getColor(R.color.mediumgray));
         view_pager.setCurrentItem(0);
-        all_post.setClickable(false);
-        sent.setClickable(true);
-        notsend.setClickable(true);
-        recieved.setClickable(true);
-        completed.setClickable(true);
-    }
-    private void notsend_click(){
-        recieved.setBackgroundColor(Color.TRANSPARENT);
-        recieved.setTextColor(getResources().getColor(R.color.mediumgray));
-        completed.setBackgroundColor(Color.TRANSPARENT);
-        completed.setTextColor(getResources().getColor(R.color.mediumgray));
-        sent.setBackgroundColor(Color.TRANSPARENT);
-        sent.setTextColor(getResources().getColor(R.color.mediumgray));
-        notsend.setBackgroundResource(background_btn_activity);
-        notsend.setTextColor(getResources().getColor(R.color.green));
-        all_post.setBackgroundColor(Color.TRANSPARENT);
-        all_post.setTextColor(getResources().getColor(R.color.mediumgray));
-        view_pager.setCurrentItem(2);
-        all_post.setClickable(true);
-        sent.setClickable(true);
-        notsend.setClickable(false);
+        sent.setClickable(false);
         recieved.setClickable(true);
         completed.setClickable(true);
     }
     private void recieved_click(){
         sent.setBackgroundColor(Color.TRANSPARENT);
         sent.setTextColor(getResources().getColor(R.color.mediumgray));
-        notsend.setBackgroundColor(Color.TRANSPARENT);
-        notsend.setTextColor(getResources().getColor(R.color.mediumgray));
         completed.setBackgroundColor(Color.TRANSPARENT);
         completed.setTextColor(getResources().getColor(R.color.mediumgray));
         recieved.setBackgroundResource(background_btn_activity);
         recieved.setTextColor(getResources().getColor(R.color.green));
-        all_post.setBackgroundColor(Color.TRANSPARENT);
-        all_post.setTextColor(getResources().getColor(R.color.mediumgray));
-        view_pager.setCurrentItem(3);
-        all_post.setClickable(true);
+        view_pager.setCurrentItem(1);
         sent.setClickable(true);
-        notsend.setClickable(true);
         recieved.setClickable(false);
         completed.setClickable(true);
     }
     private void completed_click(){
         sent.setBackgroundColor(Color.TRANSPARENT);
         sent.setTextColor(getResources().getColor(R.color.mediumgray));
-        notsend.setBackgroundColor(Color.TRANSPARENT);
-        notsend.setTextColor(getResources().getColor(R.color.mediumgray));
         recieved.setBackgroundColor(Color.TRANSPARENT);
         recieved.setTextColor(getResources().getColor(R.color.mediumgray));
         completed.setBackgroundResource(background_btn_activity);
         completed.setTextColor(getResources().getColor(R.color.green));
-        all_post.setBackgroundColor(Color.TRANSPARENT);
-        all_post.setTextColor(getResources().getColor(R.color.mediumgray));
-        view_pager.setCurrentItem(4);
-        all_post.setClickable(true);
+        view_pager.setCurrentItem(2);
         sent.setClickable(true);
-        notsend.setClickable(true);
         recieved.setClickable(true);
         completed.setClickable(false);
     }
 
     private void setupbtn() {
-        all_post.setBackgroundResource(background_btn_activity);
-        all_post.setTextColor(getResources().getColor(R.color.green));
+        sent.setBackgroundResource(background_btn_activity);
+        sent.setTextColor(getResources().getColor(R.color.green));
     }
     private void setupViewPager(ViewPager view_pager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-
-        adapter.addFrag(new AllActivityFragment(), "Trang chủ");
-        adapter.addFrag(new PostSentFragment(), "Quản lý tin");
-        adapter.addFrag(new NotSendFragment(),"Chưa gửi");
+        adapter.addFrag(new PostSentFragment(), "Đã gửi");
         adapter.addFrag(new NotSendFragment(),"Đã nhận");
         adapter.addFrag(new NotSendFragment(),"Đã hoàn thành");
         view_pager.setAdapter(adapter);
@@ -224,40 +154,13 @@ public class ActivityFragment extends Fragment {
         public void onPageSelected(int position) {
             switch (position){
                 case 0:
-                    sent.setBackgroundColor(Color.TRANSPARENT);
-                    sent.setTextColor(getResources().getColor(R.color.mediumgray));
-                    all_post.setBackgroundResource(background_btn_activity);
-                    all_post.setTextColor(getResources().getColor(R.color.green));
-                    notsend.setBackgroundColor(Color.TRANSPARENT);
-                    notsend.setTextColor(getResources().getColor(R.color.mediumgray));
-                    recieved.setBackgroundColor(Color.TRANSPARENT);
-                    recieved.setTextColor(getResources().getColor(R.color.mediumgray));
-                    completed.setBackgroundColor(Color.TRANSPARENT);
-                    completed.setTextColor(getResources().getColor(R.color.mediumgray));
-                    all_post.setClickable(false);
-                    sent.setClickable(true);
-                    notsend.setClickable(true);
-                    recieved.setClickable(true);
-                    completed.setClickable(true);
-                    //menuScroll.smoothScrollTo(all_post.getLeft(),0);
-                    ObjectAnimator animator=ObjectAnimator.ofInt(menuScroll, "scrollX",all_post.getLeft() );
-                    animator.setDuration(800);
-                    animator.start();
-                    break;
-                case 1:
-                    all_post.setBackgroundColor(Color.TRANSPARENT);
-                    all_post.setTextColor(getResources().getColor(R.color.mediumgray));
                     recieved.setBackgroundColor(Color.TRANSPARENT);
                     recieved.setTextColor(getResources().getColor(R.color.mediumgray));
                     completed.setBackgroundColor(Color.TRANSPARENT);
                     completed.setTextColor(getResources().getColor(R.color.mediumgray));
                     sent.setBackgroundResource(background_btn_activity);
                     sent.setTextColor(getResources().getColor(R.color.green));
-                    notsend.setBackgroundColor(Color.TRANSPARENT);
-                    notsend.setTextColor(getResources().getColor(R.color.mediumgray));
                     sent.setClickable(false);
-                    all_post.setClickable(true);
-                    notsend.setClickable(true);
                     recieved.setClickable(true);
                     completed.setClickable(true);
                     //menuScroll.smoothScrollTo(sent.getLeft(),0);
@@ -265,64 +168,31 @@ public class ActivityFragment extends Fragment {
                     animator1.setDuration(800);
                     animator1.start();
                     break;
-                case 2:
-                    recieved.setBackgroundColor(Color.TRANSPARENT);
-                    recieved.setTextColor(getResources().getColor(R.color.mediumgray));
-                    completed.setBackgroundColor(Color.TRANSPARENT);
-                    completed.setTextColor(getResources().getColor(R.color.mediumgray));
-                    sent.setBackgroundColor(Color.TRANSPARENT);
-                    sent.setTextColor(getResources().getColor(R.color.mediumgray));
-                    notsend.setBackgroundResource(background_btn_activity);
-                    notsend.setTextColor(getResources().getColor(R.color.green));
-                    all_post.setBackgroundColor(Color.TRANSPARENT);
-                    all_post.setTextColor(getResources().getColor(R.color.mediumgray));
-                    all_post.setClickable(true);
-                    sent.setClickable(true);
-                    notsend.setClickable(false);
-                    recieved.setClickable(true);
-                    completed.setClickable(true);
-                    //menuScroll.smoothScrollTo(notsend.getLeft(),0);
-                    ObjectAnimator animator2=ObjectAnimator.ofInt(menuScroll, "scrollX",notsend.getLeft() );
-                    animator2.setDuration(800);
-                    animator2.start();
-                    break;
-                case 3:
-                    notsend.setBackgroundColor(Color.TRANSPARENT);
-                    notsend.setTextColor(getResources().getColor(R.color.mediumgray));
+                case 1:
                     completed.setBackgroundColor(Color.TRANSPARENT);
                     completed.setTextColor(getResources().getColor(R.color.mediumgray));
                     sent.setBackgroundColor(Color.TRANSPARENT);
                     sent.setTextColor(getResources().getColor(R.color.mediumgray));
                     recieved.setBackgroundResource(background_btn_activity);
                     recieved.setTextColor(getResources().getColor(R.color.green));
-                    all_post.setBackgroundColor(Color.TRANSPARENT);
-                    all_post.setTextColor(getResources().getColor(R.color.mediumgray));
-                    all_post.setClickable(true);
                     sent.setClickable(true);
                     recieved.setClickable(false);
-                    notsend.setClickable(true);
                     completed.setClickable(true);
                     //menuScroll.smoothScrollTo(recieved.getLeft(),0);
                     ObjectAnimator animator3=ObjectAnimator.ofInt(menuScroll, "scrollX",recieved.getLeft() );
                     animator3.setDuration(800);
                     animator3.start();
                     break;
-                case 4:
+                case 2:
                     completed.setBackgroundResource(background_btn_activity);
                     completed.setTextColor(getResources().getColor(R.color.green));
                     recieved.setBackgroundColor(Color.TRANSPARENT);
                     recieved.setTextColor(getResources().getColor(R.color.mediumgray));
                     sent.setBackgroundColor(Color.TRANSPARENT);
                     sent.setTextColor(getResources().getColor(R.color.mediumgray));
-                    notsend.setBackgroundColor(Color.TRANSPARENT);
-                    notsend.setTextColor(getResources().getColor(R.color.mediumgray));
-                    all_post.setBackgroundColor(Color.TRANSPARENT);
-                    all_post.setTextColor(getResources().getColor(R.color.mediumgray));
-                    all_post.setClickable(true);
                     sent.setClickable(true);
                     completed.setClickable(false);
                     recieved.setClickable(true);
-                    notsend.setClickable(true);
                     //menuScroll.smoothScrollTo(completed.getLeft(),0);
                     ObjectAnimator animator4=ObjectAnimator.ofInt(menuScroll, "scrollX",completed.getLeft() );
                     animator4.setDuration(800);
