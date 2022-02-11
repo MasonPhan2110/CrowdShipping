@@ -16,12 +16,15 @@ import com.Duong.crowdshipping.adapter.HomeAdapter;
 import com.Duong.crowdshipping.adapter.NotiAdapter;
 import com.Duong.crowdshipping.model.Noti;
 import com.Duong.crowdshipping.model.Post;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +36,7 @@ public class NotiFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     List<Noti> mNoti = new ArrayList<>();
     NotiAdapter notiAdapter;
+    FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,7 +78,7 @@ public class NotiFragment extends Fragment {
     }
 
     private void loadNoti() {
-        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Post");
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Notification").child(fuser.getUid());
         reference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
