@@ -107,8 +107,8 @@ public class ActivityFragment extends Fragment {
     private void setupViewPager(ViewPager view_pager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFrag(new PostSentFragment(), "Đã gửi");
-        adapter.addFrag(new NotSendFragment(),"Đã nhận");
-        adapter.addFrag(new NotSendFragment(),"Đã hoàn thành");
+        adapter.addFrag(new ReceiveFragment(),"Đã nhận");
+        adapter.addFrag(new CompleteFragment(),"Đã hoàn thành");
         view_pager.setAdapter(adapter);
     }
     static class ViewPagerAdapter extends FragmentStatePagerAdapter {

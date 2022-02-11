@@ -1,9 +1,6 @@
 package com.Duong.crowdshipping.fragment;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,8 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import com.Duong.crowdshipping.R;
-import com.Duong.crowdshipping.adapter.HomeAdapter;
 import com.Duong.crowdshipping.adapter.PostSentAdapter;
 import com.Duong.crowdshipping.adapter.SentPostAdapter;
 import com.Duong.crowdshipping.model.Post;
@@ -28,18 +27,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
-public class PostSentFragment extends Fragment {
+public class ReceiveFragment extends Fragment {
+    List<Post> mPost = new ArrayList<>();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    SentPostAdapter postSentAdapter;
     RecyclerView recycleView;
     SwipeRefreshLayout refresh;
     LinearLayoutManager linearLayoutManager;
-    List<Post> mPost=new ArrayList<>();
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    SentPostAdapter postSentAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_post_sent, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_not_recieved, container, false);
         recycleView = view.findViewById(R.id.recycle_view);
         refresh = view.findViewById(R.id.refresh);
 
@@ -57,7 +56,7 @@ public class PostSentFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                             Post post = dataSnapshot.getValue(Post.class);
-                            if(user.getUid().equals(post.getCreateID())){
+                            if(user.getUid().equals(post.getShipper()) && post.getStatus().equals("1")){
                                 mPost.add(post);
                             }
                         }
@@ -75,7 +74,6 @@ public class PostSentFragment extends Fragment {
         });
         return view;
     }
-
     private void setup_fragment() {
         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Post");
         reference1.addValueEventListener(new ValueEventListener() {
@@ -84,12 +82,12 @@ public class PostSentFragment extends Fragment {
                 mPost.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Post post = dataSnapshot.getValue(Post.class);
-                    if(user.getUid().equals(post.getCreateID())){
+                    if(user.getUid().equals(post.getShipper())&& post.getStatus().equals("1")){
                         mPost.add(post);
                     }
                 }
                 Collections.reverse(mPost);
-                postSentAdapter = new SentPostAdapter(getContext(), mPost,"Sent" );
+                postSentAdapter = new SentPostAdapter(getContext(), mPost, "Receive" );
                 recycleView.setAdapter(postSentAdapter);
             }
 

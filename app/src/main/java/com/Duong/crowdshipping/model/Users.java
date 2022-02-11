@@ -1,18 +1,31 @@
 package com.Duong.crowdshipping.model;
 
-public class Users {
-    private String username, email, phone,id, idImg;
+import java.util.HashMap;
 
-    public Users(String username, String email, String phone, String id, String idImg) {
+public class Users {
+    private String username, email, phone,id, ava;
+    private HashMap<String, Object> idImg;
+
+    public Users(String username, String email, String phone, String id, HashMap<String, Object> idImg, String ava) {
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.id = id;
         this.idImg = idImg;
+        this.ava = ava;
     }
     public Users(){
 
     }
+
+    public String getAva() {
+        return ava;
+    }
+
+    public void setAva(String ava) {
+        this.ava = ava;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -43,11 +56,11 @@ public class Users {
     public void setId(String id) {
         this.id = id;
     }
-    public String getIdImg() {
+    public HashMap<String, Object> getIdImg() {
         return idImg;
     }
 
-    public void setIdImg(String idImg) {
+    public void setIdImg(HashMap<String, Object> idImg) {
         this.idImg = idImg;
     }
 }

@@ -15,8 +15,10 @@ public class Post implements Serializable {
     private String Ship;
     private String Time;
     private String PostID;
+    private String Shipper;
+    private String Status;
 
-    public Post(String CreateID,HashMap<String, Object> linkImage,HashMap<String,String> AddressFrom,HashMap<String,String> AddressTo,String phoneFrom,String phoneTo,String Type,String Description,String Ship,String Time, String PostID){
+    public Post(String Shipper, String Status,String CreateID,HashMap<String, Object> linkImage,HashMap<String,String> AddressFrom,HashMap<String,String> AddressTo,String phoneFrom,String phoneTo,String Type,String Description,String Ship,String Time, String PostID){
         this.CreateID= CreateID;
         this.linkImage= linkImage;
         this.AddressFrom= AddressFrom;
@@ -28,8 +30,26 @@ public class Post implements Serializable {
         this.Ship= Ship;
         this.Time= Time;
         this.PostID = PostID;
+        this.Shipper = Shipper;
+        this.Status = Status;
     }
     public Post() {
+    }
+
+    public String getShipper() {
+        return Shipper;
+    }
+
+    public void setShipper(String shipper) {
+        Shipper = shipper;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 
     public String getPostID() {

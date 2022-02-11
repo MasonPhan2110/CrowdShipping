@@ -13,6 +13,7 @@ import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.model.Post;
 import com.Duong.crowdshipping.model.SliderData;
 import com.Duong.crowdshipping.model.Users;
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,13 +27,14 @@ import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class DetailPostAdapter {
     LinearLayout linearLayout;
     Context mContext;
     LayoutInflater inflater;
     ArrayList<SliderData> sliderDataArrayList;
     Post post;
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     public DetailPostAdapter(LinearLayout linearLayout, Context mContext, ArrayList<SliderData> sliderDataArrayList, Post post){
         this.mContext = mContext;
         this.linearLayout = linearLayout;
@@ -43,6 +45,7 @@ public class DetailPostAdapter {
         inflater = LayoutInflater.from(mContext);
         SliderView sliderView;
         TextView textView,des, from, to, ship, username;
+        CircleImageView ava;
         View view = inflater.inflate(R.layout.item_post_home_header, linearLayout, false);
         sliderView = view.findViewById(R.id.slider);
         sliderView.getLayoutParams().height = width;
@@ -61,6 +64,7 @@ public class DetailPostAdapter {
         to = body.findViewById(R.id.to);
         ship = body.findViewById(R.id.ship);
         username = body.findViewById(R.id.username);
+        ava = body.findViewById(R.id.ava);
         des.setText(des.getText()+post.getDescription());
         from.setText("Từ: đường "+post.getAddressFrom().get("Streets")+", phường "+post.getAddressFrom().get("Wards")+", quận "+post.getAddressFrom().get("District")+", "+post.getAddressFrom().get("City"));
         to.setText("Đến: đường "+post.getAddressTo().get("Streets")+", phường " +post.getAddressTo().get("Wards")+", quận "+post.getAddressTo().get("District")+", "+post.getAddressTo().get("City"));
@@ -71,6 +75,11 @@ public class DetailPostAdapter {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Users user = snapshot.getValue(Users.class);
                 username.setText(user.getUsername());
+                if(user.getAva()!=null){
+                    Glide.with(mContext).load(user.getAva()).into(ava);
+                }else{
+                    ava.setImageResource(R.mipmap.ic_launcher);
+                }
             }
 
             @Override

@@ -19,7 +19,7 @@
             android:background="@color/white">
 
             <TextView
-                android:id="@+id/park_name"
+                android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"

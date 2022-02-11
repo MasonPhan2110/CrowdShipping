@@ -32,10 +32,11 @@ import java.util.Locale;
 public class SentPostAdapter extends   RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private Context mcontext;
     private List<Post> mPost;
-    public SentPostAdapter(Context mcontext, List<Post> mPost){
+    private String Type;
+    public SentPostAdapter(Context mcontext, List<Post> mPost,String type){
         this.mcontext = mcontext;
         this.mPost = mPost;
-
+        this.Type = type;
     }
     @NonNull
     @Override
@@ -118,9 +119,8 @@ public class SentPostAdapter extends   RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mcontext, DetailPostActivity.class);
-                    intent.putExtra("ImageLink", post.getLinkImage());
-                    intent.putExtra("Type", post.getType());
                     intent.putExtra("Post", (Serializable) post);
+                    intent.putExtra("Type", Type);
                     mcontext.startActivity(intent);
                 }
             });

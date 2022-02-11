@@ -60,7 +60,6 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
 
         recycle_view = view.findViewById(R.id.recycle_view);
         recycle_view.setHasFixedSize(true);
-
         refresh = view.findViewById(R.id.refresh);
         linearLayoutManager = new LinearLayoutManager(getContext());
         recycle_view.setLayoutManager(linearLayoutManager);
@@ -81,7 +80,7 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                             Post post = dataSnapshot.getValue(Post.class);
-                            if(!user.getUid().equals(post.getCreateID())){
+                            if(!user.getUid().equals(post.getCreateID())&&post.getShipper()==null){
                                 mPost.add(post);
                             }
                         }
@@ -108,7 +107,7 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
                 mPost.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Post post = dataSnapshot.getValue(Post.class);
-                    if(!user.getUid().equals(post.getCreateID())){
+                    if(!user.getUid().equals(post.getCreateID())&&post.getShipper()==null){
                         mPost.add(post);
                     }
                 }
@@ -133,7 +132,7 @@ public class HomeFragment extends Fragment implements HomeActivity.HomeActivityL
                 postList.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Post post = dataSnapshot.getValue(Post.class);
-                    if(!user.getUid().equals(post.getCreateID())){
+                    if(!user.getUid().equals(post.getCreateID())&&post.getShipper()==null){
                         postList.add(post);
                     }
                 }

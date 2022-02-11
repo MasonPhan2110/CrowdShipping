@@ -57,9 +57,18 @@
             android:name=".Activity.HomeActivity"
             android:exported="true" />
         <activity
+            android:name=".Activity.MessageActivity"
+            android:exported="true" />
+        <activity
             android:name=".Login.RegisterActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.EditProfile"
+            android:exported="true" />
+        <activity
+            android:name=".Activity.ViewPictureActivity"
+            android:exported="true" />
         <activity
             android:name=".Login.LoginActivity"
             android:exported="true"

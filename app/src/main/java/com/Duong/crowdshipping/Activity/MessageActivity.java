@@ -22,6 +22,7 @@ import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.adapter.MessageAdapter;
 import com.Duong.crowdshipping.model.Chat;
 import com.Duong.crowdshipping.model.Parks;
+import com.Duong.crowdshipping.model.Users;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MessageActivity extends AppCompatActivity {
-    TextView park_name;
+    TextView username;
     FirebaseUser fuser;
     DatabaseReference reference;
     RecyclerView recyclerView;
@@ -44,7 +45,7 @@ public class MessageActivity extends AppCompatActivity {
     Intent intent;
     List<Chat> mchat;
     MessageAdapter messageAdapter;
-    String parkid;
+    String createID;
     ValueEventListener seenListener;
 
     @Override
@@ -70,25 +71,27 @@ public class MessageActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-
+        int flag = MessageActivity.this.getWindow().getDecorView().getSystemUiVisibility();
+        flag |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        MessageActivity.this.getWindow().getDecorView().setSystemUiVisibility(flag);
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.white));
 
-        park_name = findViewById(R.id.park_name);
+        username = findViewById(R.id.username);
         btn_send = findViewById(R.id.btn_send);
         txt_send = findViewById(R.id.text_send);
         intent= getIntent();
-        parkid = intent.getStringExtra("parkid");
+        createID = intent.getStringExtra("userid");
         fuser = FirebaseAuth.getInstance().getCurrentUser();
-        reference= FirebaseDatabase.getInstance().getReference("Parking lot").child("Hanoi").child(parkid);
+        reference= FirebaseDatabase.getInstance().getReference("Users").child(createID);
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String msg= txt_send.getText().toString();
                 if(!msg.equals("")){
-                    sendMessage(fuser.getUid(), parkid, msg);
+                    sendMessage(fuser.getUid(), createID, msg);
                 }else {
                     Toast.makeText(MessageActivity.this, "You cant send empty message", Toast.LENGTH_SHORT).show();
                 }
@@ -98,16 +101,16 @@ public class MessageActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Parks parks = snapshot.getValue(Parks.class);
-                park_name.setText(parks.getName());
-                readMessage(fuser.getUid(), parks.getID());
+                Users users = snapshot.getValue(Users.class);
+                username.setText(users.getUsername());
+                readMessage(fuser.getUid(), users.getId());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-        seenMessage(parkid);
+        seenMessage(createID);
     }
 
     private void seenMessage(final String userid) {
@@ -161,7 +164,6 @@ public class MessageActivity extends AppCompatActivity {
     private void sendMessage(String sender, String reciever, String msg) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         intent = getIntent();
-        parkid = intent.getStringExtra("parkid");
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", sender);
         hashMap.put("receiver", reciever);
@@ -170,12 +172,12 @@ public class MessageActivity extends AppCompatActivity {
         reference.child("Chats").push().setValue(hashMap);
         final DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("Chatlist")
                 .child(fuser.getUid())
-                .child(parkid);
+                .child(createID);
         chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()){
-                    chatRef.child("id").setValue(parkid);
+                    chatRef.child("id").setValue(createID);
                 }
             }
 
@@ -185,7 +187,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
         final DatabaseReference chatRefReceiver = FirebaseDatabase.getInstance().getReference("Chatlist")
-                .child(parkid)
+                .child(createID)
                 .child(fuser.getUid());
         chatRefReceiver.child("id").setValue(fuser.getUid());
         final String message = msg;
