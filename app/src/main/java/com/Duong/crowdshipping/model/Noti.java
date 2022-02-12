@@ -1,8 +1,9 @@
 package com.Duong.crowdshipping.model;
 
 public class Noti {
-    String MSG, PostID,Time,NotiID,isseen;
-    public Noti(String MSG, String PostID, String Time, String NotiID, String isseen){
+    String MSG, PostID,Time,NotiID;
+    private boolean isseen;
+    public Noti(String MSG, String PostID, String Time, String NotiID, boolean isseen){
         this.MSG = MSG;
         this.PostID = PostID;
         this.Time = Time;
@@ -13,11 +14,11 @@ public class Noti {
 
     }
 
-    public String getSeen() {
+    public boolean getSeen() {
         return isseen;
     }
 
-    public void setSeen(String seen) {
+    public void setSeen(boolean seen) {
         isseen = seen;
     }
 

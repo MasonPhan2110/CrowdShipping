@@ -50,8 +50,8 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
         Noti noti = mNoti.get(position);
-        Log.d("noticount", "onDataChange: "+noti.getMSG());
-//        if(noti.getSeen().equals("false")){
+        Log.d("noticount", "onDataChange: "+noti.getSeen());
+//        if(!noti.getSeen()){
 //            viewHolder.relativeLayout.setBackgroundColor(R.color.lightgray);
 //        }
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(noti.getPostID());
@@ -67,7 +67,7 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     public void onClick(View view) {
                         DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Notification").child(post.getCreateID()).child(noti.getNotiID());
                         HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("isseen","true");
+                        hashMap.put("isseen",true);
                         reference1.updateChildren(hashMap);
                         Intent intent = new Intent(mContext, DetailPostActivity.class);
                         intent.putExtra("Post", post);

@@ -54,7 +54,7 @@ public class NotiFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mNoti.clear();
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Notification").child(fuser.getUid());
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
