@@ -146,6 +146,7 @@ public class DetailPostActivity extends AppCompatActivity {
                             hashMap.put("PostID",post.getPostID());
                             hashMap.put("Time", currentDateandTime);
                             hashMap.put("NotiID", pushedPostRef.getKey());
+                            hashMap.put("isseen","false");
                             pushedPostRef.setValue(hashMap);
                         }
                     }).setNegativeButton("Close", null)

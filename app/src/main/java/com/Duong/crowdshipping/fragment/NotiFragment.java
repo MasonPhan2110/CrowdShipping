@@ -1,6 +1,7 @@
 package com.Duong.crowdshipping.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +87,7 @@ public class NotiFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Noti noti = dataSnapshot.getValue(Noti.class);
                     mNoti.add(noti);
+
                 }
                 Collections.reverse(mNoti);
                 notiAdapter = new NotiAdapter(getContext(), mNoti);

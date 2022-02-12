@@ -1,15 +1,24 @@
 package com.Duong.crowdshipping.model;
 
 public class Noti {
-    String MSG, PostID,Time,NotiID;
-    public Noti(String MSG, String PostID, String Time, String NotiID){
+    String MSG, PostID,Time,NotiID,isseen;
+    public Noti(String MSG, String PostID, String Time, String NotiID, String isseen){
         this.MSG = MSG;
         this.PostID = PostID;
         this.Time = Time;
         this.NotiID = NotiID;
+        this.isseen = isseen;
     }
     public Noti(){
 
+    }
+
+    public String getSeen() {
+        return isseen;
+    }
+
+    public void setSeen(String seen) {
+        isseen = seen;
     }
 
     public String getMSG() {

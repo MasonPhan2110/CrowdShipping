@@ -3,18 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:id="@+id/relativelayout"
+    android:clickable="true">
+
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/post_profile"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:src="@mipmap/ic_launcher"
-        android:id="@+id/post_profile"/>
+        android:src="@mipmap/ic_launcher" />
+
     <TextView
+        android:id="@+id/noti"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:paddingLeft="10dp"
         android:layout_toRightOf="@id/post_profile"
-        android:textSize="18dp"
-        android:id="@+id/noti"
-        android:textColor="@color/black"/>
+        android:paddingLeft="10dp"
+        android:textColor="@color/black"
+        android:textSize="18dp" />
 </RelativeLayout>

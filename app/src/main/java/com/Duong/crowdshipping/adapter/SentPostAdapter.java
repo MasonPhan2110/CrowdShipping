@@ -49,7 +49,14 @@ public class SentPostAdapter extends   RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder itemHolder = (ViewHolder) holder;
         if(mPost.size()==0){
-            itemHolder.text_no_post.setText("Bạn chưa đăng tin nào");
+            if(Type.equals("Receive")){
+                itemHolder.text_no_post.setText("Bạn chưa nhận tin nào");
+            }else if(Type.equals("Sent")){
+                itemHolder.text_no_post.setText("Bạn chưa đăng tin nào");
+            }else if(Type.equals("Complete")){
+                itemHolder.text_no_post.setText("Bạn chưa hoàn thành tin nào");
+            }
+
             itemHolder.text_no_post.setVisibility(View.VISIBLE);
             itemHolder.linear1.setVisibility(View.GONE);
         }else{

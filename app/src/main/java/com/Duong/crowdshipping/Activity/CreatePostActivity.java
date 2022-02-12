@@ -1105,6 +1105,7 @@ public class CreatePostActivity extends AppCompatActivity {
         hashMap.put("Ship",spinnerShip);
         hashMap.put("linkImage",imageURI);
         hashMap.put("Time", currentDateandTime);
+        hashMap.put("Status", "0");
         pushedPostRef.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
