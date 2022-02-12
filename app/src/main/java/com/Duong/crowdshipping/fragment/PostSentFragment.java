@@ -57,7 +57,7 @@ public class PostSentFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                             Post post = dataSnapshot.getValue(Post.class);
-                            if(user.getUid().equals(post.getCreateID())){
+                            if(user.getUid().equals(post.getCreateID())&&post.getStatus().equals("0")){
                                 mPost.add(post);
                             }
                         }
