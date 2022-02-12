@@ -109,6 +109,8 @@ public class DetailPostActivity extends AppCompatActivity {
 
         }else if(Type.equals("Receive")){
             getPost.setText("Đã nhận đơn");
+        }else if(Type.equals("Complete")){
+            getPost.setVisibility(View.GONE);
         }
     }
 
@@ -146,7 +148,7 @@ public class DetailPostActivity extends AppCompatActivity {
                             hashMap.put("PostID",post.getPostID());
                             hashMap.put("Time", currentDateandTime);
                             hashMap.put("NotiID", pushedPostRef.getKey());
-                            hashMap.put("isseen","false");
+                            hashMap.put("isseen",false);
                             pushedPostRef.setValue(hashMap);
                         }
                     }).setNegativeButton("Close", null)

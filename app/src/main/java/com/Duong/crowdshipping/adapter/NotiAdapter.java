@@ -50,7 +50,7 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
         Noti noti = mNoti.get(position);
-        Log.d("noticount", "onDataChange: "+noti.isIsseen());
+        //Log.d("noticount", "onDataChange: "+noti.isIsseen());
 //        if(!noti.getSeen()){
 //            viewHolder.relativeLayout.setBackgroundColor(R.color.lightgray);
 //        }
@@ -73,7 +73,6 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         intent.putExtra("Post", post);
                         intent.putExtra("Type","Sent");
                         mContext.startActivity(intent);
-                        Toast.makeText(mContext, "click", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
