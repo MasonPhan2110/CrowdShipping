@@ -14,12 +14,12 @@ public class Noti {
 
     }
 
-    public boolean getSeen() {
+    public boolean isIsseen() {
         return isseen;
     }
 
-    public void setSeen(boolean seen) {
-        isseen = seen;
+    public void setIsseen(boolean isseen) {
+        this.isseen = isseen;
     }
 
     public String getMSG() {

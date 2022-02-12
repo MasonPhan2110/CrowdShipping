@@ -181,7 +181,6 @@ public class DetailPostActivity extends AppCompatActivity {
                         .show();
             }else{
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
-                Toast.makeText(getApplicationContext(), "click", Toast.LENGTH_SHORT).show();
                 reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

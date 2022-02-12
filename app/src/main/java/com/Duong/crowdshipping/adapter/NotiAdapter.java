@@ -50,7 +50,7 @@ public class NotiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewHolder viewHolder = (ViewHolder) holder;
         Noti noti = mNoti.get(position);
-        Log.d("noticount", "onDataChange: "+noti.getSeen());
+        Log.d("noticount", "onDataChange: "+noti.isIsseen());
 //        if(!noti.getSeen()){
 //            viewHolder.relativeLayout.setBackgroundColor(R.color.lightgray);
 //        }

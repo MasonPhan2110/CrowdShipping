@@ -85,7 +85,7 @@ public class CompleteFragment extends Fragment {
                 mPost.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Post post = dataSnapshot.getValue(Post.class);
-                    if(user.getUid().equals(post.getShipper())&& post.getStatus().equals("3")){
+                    if(user.getUid().equals(post.getShipper())||user.getUid().equals(post.getCreateID()) && post.getStatus().equals("3")){
                         mPost.add(post);
                     }
                 }
