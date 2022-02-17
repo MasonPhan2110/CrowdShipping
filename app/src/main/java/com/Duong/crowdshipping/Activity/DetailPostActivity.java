@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.adapter.DetailPostAdapter;
@@ -39,8 +38,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 public class DetailPostActivity extends AppCompatActivity {
     LinearLayout linearLayout;
@@ -215,6 +212,8 @@ public class DetailPostActivity extends AppCompatActivity {
                             sendMessage(post.getCreateID(),user.getUid(),msg);
                             msg="Số điện thoại người nhận: "+post.getPhoneTo();
                             sendMessage(post.getCreateID(),user.getUid(),msg);
+                            Intent intent = new Intent(DetailPostActivity.this, MapActivity.class);
+                            startActivity(intent);
                         }
                     }
 
