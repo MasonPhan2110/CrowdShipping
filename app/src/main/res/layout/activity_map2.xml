@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.percentlayout.widget.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,56 +7,23 @@
 
     <com.mapbox.maps.MapView
         android:id="@+id/mapView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
-    <com.mapbox.navigation.ui.maneuver.view.MapboxManeuverView
-        android:id="@+id/maneuverView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <androidx.cardview.widget.CardView
-        android:id="@+id/tripProgressCard"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:cardElevation="8dp"
-        app:cardUseCompatPadding="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <com.mapbox.navigation.ui.tripprogress.view.MapboxTripProgressView
-            android:id="@+id/tripProgressView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <ImageView
-            android:id="@+id/stop"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginEnd="12dp"
-            app:srcCompat="@android:drawable/ic_delete" />
-    </androidx.cardview.widget.CardView>
     <com.mapbox.navigation.ui.maps.camera.view.MapboxRouteOverviewButton
         android:id="@+id/routeOverview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/maneuverView" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
     <com.mapbox.navigation.ui.maps.camera.view.MapboxRecenterButton
         android:id="@+id/recenter"
         android:layout_width="wrap_content"
@@ -64,14 +31,110 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/routeOverview" />
-    <Button
-        android:id="@+id/button"
+        app:layout_constraintTop_toBottomOf="@id/routeOverview"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/routeOverview"/>
+
+    <androidx.percentlayout.widget.PercentRelativeLayout
+        android:id="@+id/btnWrap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="20dp"
-        android:visibility="gone"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_below="@id/mapView"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Thông tin đơn hàng"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/addressFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="Địa chỉ lấy hàng:"
+            android:textSize="17dp" />
+
+        <TextView
+            android:id="@+id/addressTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/addressFrom"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="Địa chỉ giao hàng:"
+            android:textSize="17dp" />
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/addressTo"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="Loại món hàng: "
+            android:textSize="17dp" />
+
+        <TextView
+            android:id="@+id/fragile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/type"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="Hàng dễ vỡ"
+            android:textSize="17dp" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_btn_green"
+            android:text="Di chuyển đến chỗ nhận hàng"
+            android:textSize="16dp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_widthPercent="64%" />
+
+        <ImageView
+            android:id="@+id/btnMSG"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toRightOf="@id/button"
+            android:background="@drawable/background_btn_green"
+            android:padding="10dp"
+            android:src="@drawable/ic_round_chat_24"
+            android:clickable="true"/>
+
+        <ImageView
+            android:id="@+id/btnCall"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_toRightOf="@id/btnMSG"
+            android:background="@drawable/background_btn_green"
+            android:padding="10dp"
+            android:src="@drawable/ic_round_call_24"
+            android:clickable="true"/>
+    </androidx.percentlayout.widget.PercentRelativeLayout>
+
+
+</androidx.percentlayout.widget.PercentRelativeLayout>

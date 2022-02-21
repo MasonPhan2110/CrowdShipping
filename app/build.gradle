@@ -68,4 +68,6 @@ dependencies {
     implementation 'com.mapbox.maps:android:10.3.0'
     implementation "com.mapbox.navigation:android:2.3.0-beta.2"
     implementation "com.mapbox.search:mapbox-search-android:1.0.0-beta.26"
+    //noinspection GradleCompatible
+    implementation 'com.android.support:percent:24.0.0'
 }

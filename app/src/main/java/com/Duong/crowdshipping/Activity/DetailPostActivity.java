@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -198,21 +199,14 @@ public class DetailPostActivity extends AppCompatActivity {
                             hashMap.put("Shipper", user.getUid());
                             hashMap.put("Status","1");
                             reference1.updateChildren(hashMap);
-                            String msg = "Đơn hàng đã được nhận bởi "+users.getUsername()+".";
+                            String msg = "Đơn hàng đã được nhận bởi "+users.getUsername()+"." +"\nSố điện thoại của tôi là: "+users.getPhone();
                             sendMessage(user.getUid(),post.getCreateID(),msg);
-                            msg="Đơn hàng là "+post.getDescription();
-                            sendMessage(post.getCreateID(),user.getUid(),msg);
-                            msg="Từ: "+post.getAddressFrom().get("Address")+", đường "+post.getAddressFrom().get("Streets")+", phường "+post.getAddressFrom().get("Wards")+
-                                    ", quận "+post.getAddressFrom().get("District")+",thành phố "+post.getAddressFrom().get("City");
-                            sendMessage(post.getCreateID(),user.getUid(),msg);
-                            msg="Đến: "+post.getAddressTo().get("Address")+", đường "+post.getAddressTo().get("Streets")+", phường "+post.getAddressTo().get("Wards")+
-                                    ", quận "+post.getAddressTo().get("District")+",thành phố "+post.getAddressTo().get("City");
-                            sendMessage(post.getCreateID(),user.getUid(),msg);
-                            msg="Số điện thoại người gửi: "+post.getPhoneFrom();
-                            sendMessage(post.getCreateID(),user.getUid(),msg);
-                            msg="Số điện thoại người nhận: "+post.getPhoneTo();
+                            msg="Đơn hàng là "+post.getDescription() + ".\nTừ: "+post.getAddressFrom().get("Address")+", đường "+post.getAddressFrom().get("Streets")+", phường "+post.getAddressFrom().get("Wards")+
+                                    ", quận "+post.getAddressFrom().get("District")+",thành phố "+post.getAddressFrom().get("City") +".\nĐến: "+post.getAddressTo().get("Address")+", đường "+post.getAddressTo().get("Streets")+", phường "+post.getAddressTo().get("Wards")+
+                                    ", quận "+post.getAddressTo().get("District")+",thành phố "+post.getAddressTo().get("City") + ".\nSố điện thoại người gửi: "+post.getPhoneFrom() +".\nSố điện thoại người nhận: "+post.getPhoneTo();
                             sendMessage(post.getCreateID(),user.getUid(),msg);
                             Intent intent = new Intent(DetailPostActivity.this, MapActivity.class);
+                            intent.putExtra("Post", (Serializable) post);
                             startActivity(intent);
                         }
                     }

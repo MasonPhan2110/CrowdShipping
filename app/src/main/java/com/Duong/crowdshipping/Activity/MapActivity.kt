@@ -2,6 +2,7 @@ package com.Duong.crowdshipping.Activity
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -11,12 +12,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.Duong.crowdshipping.R
+import com.Duong.crowdshipping.model.Post
 import com.Duong.crowdshipping.utils.LocationPermissionHelper
 import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.gestures.MoveGestureDetector
@@ -50,7 +53,6 @@ import com.mapbox.navigation.core.trip.session.LocationMatcherResult
 import com.mapbox.navigation.core.trip.session.LocationObserver
 import com.mapbox.navigation.core.trip.session.RouteProgressObserver
 import com.mapbox.navigation.ui.maneuver.api.MapboxManeuverApi
-import com.mapbox.navigation.ui.maneuver.view.MapboxManeuverView
 import com.mapbox.navigation.ui.maps.camera.NavigationCamera
 import com.mapbox.navigation.ui.maps.camera.data.MapboxNavigationViewportDataSource
 import com.mapbox.navigation.ui.maps.camera.lifecycle.NavigationBasicGesturesHandler
@@ -73,7 +75,6 @@ import com.mapbox.navigation.ui.maps.route.arrow.model.RouteArrowOptions
 import com.mapbox.navigation.ui.maps.route.line.model.MapboxRouteLineOptions
 import com.mapbox.navigation.ui.maps.route.line.model.RouteLine
 import com.mapbox.navigation.ui.tripprogress.model.*
-import com.mapbox.navigation.ui.tripprogress.view.MapboxTripProgressView
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
 import com.mapbox.navigation.utils.internal.toPoint
@@ -150,17 +151,17 @@ class MapActivity : AppCompatActivity() {
             if(locationMatcherResult.isOffRoad){
                 Log.d("IsOffRoad",locationMatcherResult.isOffRoad.toString())
             }
+            navigationLocationProvider.changePosition(
+                location = enhancedLocation,
+                keyPoints = locationMatcherResult.keyPoints,
+            )
+            Log.d("Routessssss",locationMatcherResult.toString())
+            viewportDataSource.onLocationChanged(enhancedLocation)
+            viewportDataSource.evaluate()
 
             // if this is the first location update the activity has received,
             // it's best to immediately move the camera to the current user location
             if (!firstLocationUpdateReceived) {
-                navigationLocationProvider.changePosition(
-                    location = enhancedLocation,
-                    keyPoints = locationMatcherResult.keyPoints,
-                )
-                Log.d("Routessssss",locationMatcherResult.toString())
-                viewportDataSource.onLocationChanged(enhancedLocation)
-                viewportDataSource.evaluate()
                 firstLocationUpdateReceived = true
                 navigationCamera.requestNavigationCameraToOverview(
                     stateTransitionOptions = NavigationCameraTransitionOptions.Builder()
@@ -181,31 +182,10 @@ class MapActivity : AppCompatActivity() {
             val maneuverArrowResult = routeArrowApi.addUpcomingManeuverArrow(routeProgress)
             routeArrowView.renderManeuverUpdate(style, maneuverArrowResult)
         }
-
-        // update top banner with maneuver instructions
-        val maneuvers = maneuverApi.getManeuvers(routeProgress)
-        maneuvers.fold(
-            { error ->
-                Toast.makeText(
-                    this@MapActivity,
-                    error.errorMessage,
-                    Toast.LENGTH_SHORT
-                ).show()
-            },
-            {
-//                maneuverView.visibility = View.VISIBLE
-//                maneuverView.renderManeuvers(maneuvers)
-            }
-        )
-
-// update bottom trip progress summary
-       tripProgressView.render(
-            tripProgressApi.getTripProgress(routeProgress)
-        )
     }
     private val routesObserver = RoutesObserver { routeUpdateResult ->
         if (routeUpdateResult.routes.isNotEmpty()) {
-// generate route geometries asynchronously and render them
+            // generate route geometries asynchronously and render them
             val routeLines = routeUpdateResult.routes.map { RouteLine(it, null) }
 
             routeLineApi.setRoutes(
@@ -215,11 +195,11 @@ class MapActivity : AppCompatActivity() {
                     routeLineView.renderRouteDrawData(this, value)
                 }
             }
-// update the camera position to account for the new route
+            // update the camera position to account for the new route
             viewportDataSource.onRouteChanged(routeUpdateResult.routes.first())
             viewportDataSource.evaluate()
         } else {
-// remove the route line and route arrow from the map
+            // remove the route line and route arrow from the map
             val style =  mapView.getMapboxMap().getStyle()
             if (style != null) {
                 routeLineApi.clearRouteLine { value ->
@@ -230,7 +210,7 @@ class MapActivity : AppCompatActivity() {
                 }
             }
 
-// remove the route reference from camera position evaluations
+            // remove the route reference from camera position evaluations
             viewportDataSource.clearRouteData()
             viewportDataSource.evaluate()
         }
@@ -240,7 +220,7 @@ class MapActivity : AppCompatActivity() {
             if (suggestions.isEmpty()) {
                 Log.i("SearchApiExample", "No suggestions found")
             } else {
-                Log.i("SearchApiExample", "Search suggestions: $suggestions.\nSelecting first suggestion...")
+                Log.i("SearchApiExampl4e", "Search suggestions: $suggestions.\nSelecting first suggestion...")
                 searchRequestTask = searchEngine.select(suggestions.first(), this)
             }
         }
@@ -270,8 +250,6 @@ class MapActivity : AppCompatActivity() {
     private lateinit var locationPermissionHelper: LocationPermissionHelper
 
     private val onIndicatorPositionChangedListener = OnIndicatorPositionChangedListener {
-//        mapView.getMapboxMap().setCamera(CameraOptions.Builder().center(it).build())
-//        mapView.gestures.focalPoint = mapView.getMapboxMap().pixelForCoordinate(it)
         currentLocation = it
         if (mapboxNavigation.getRoutes().isEmpty()) {
             // if simulation is enabled (ReplayLocationEngine set to NavigationOptions)
@@ -302,16 +280,22 @@ class MapActivity : AppCompatActivity() {
         override fun onMoveEnd(detector: MoveGestureDetector) {}
     }
     private lateinit var mapView: MapView
-//    private lateinit var maneuverView: MapboxManeuverView
-    private lateinit var tripProgressView:MapboxTripProgressView
     private lateinit var recenter:MapboxRecenterButton
-    private lateinit var stop:ImageView
     private lateinit var  routeOverview: MapboxRouteOverviewButton
+    private lateinit var post: Post
+    private lateinit var addressFrom: TextView
+    private lateinit var addressTo: TextView
+    private lateinit var type: TextView
+    private lateinit var message: ImageView
+    private lateinit var call : ImageView
 //    private lateinit var tripProgressCard: CardView
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map2)
+
+        val intent = intent
+        post = (intent.getSerializableExtra("Post") as Post?)!!
         try {
             MapboxSearchSdk.initialize(
                 application = application,
@@ -325,12 +309,13 @@ class MapActivity : AppCompatActivity() {
 
         searchEngine = MapboxSearchSdk.getSearchEngine()
         mapView = findViewById(R.id.mapView)
-//        maneuverView = findViewById(R.id.maneuverView)
-        tripProgressView = findViewById(R.id.tripProgressView)
         recenter = findViewById(R.id.recenter)
-        stop = findViewById(R.id.stop)
         routeOverview = findViewById(R.id.routeOverview)
-//        tripProgressCard = findViewById(R.id.tripProgressCard)
+        addressFrom = findViewById(R.id.addressFrom)
+        addressTo = findViewById(R.id.addressTo)
+        type = findViewById(R.id.type)
+        message = findViewById(R.id.btnMSG)
+        call = findViewById(R.id.btnCall)
         locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
         locationPermissionHelper.checkPermissions {
             onMapReady()
@@ -358,17 +343,15 @@ class MapActivity : AppCompatActivity() {
             NavigationBasicGesturesHandler(navigationCamera)
         )
         navigationCamera.registerNavigationCameraStateChangeObserver { navigationCameraState ->
-// shows/hide the recenter button depending on the camera state
+            // shows/hide the recenter button depending on the camera state
             when (navigationCameraState) {
                 NavigationCameraState.TRANSITION_TO_FOLLOWING,
                 NavigationCameraState.FOLLOWING -> {
-                    recenter.visibility = View.INVISIBLE
-                    routeOverview.visibility=View.VISIBLE}
+                    recenter.visibility = View.INVISIBLE}
                 NavigationCameraState.TRANSITION_TO_OVERVIEW,
                 NavigationCameraState.OVERVIEW,
                 NavigationCameraState.IDLE -> {
-                    recenter.visibility = View.VISIBLE
-                    routeOverview.visibility=View.INVISIBLE}
+                    recenter.visibility = View.VISIBLE }
             }
         }
         if (this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -412,9 +395,9 @@ class MapActivity : AppCompatActivity() {
         routeArrowView = MapboxRouteArrowView(routeArrowOptions)
 
 
-        stop.setOnClickListener {
-            clearRouteAndStopNavigation()
-        }
+//        stop.setOnClickListener {
+//            clearRouteAndStopNavigation()
+//        }
         recenter.setOnClickListener {
             navigationCamera.requestNavigationCameraToFollowing()
             routeOverview.showTextAndExtend(BUTTON_ANIMATION_DURATION)
@@ -429,6 +412,10 @@ class MapActivity : AppCompatActivity() {
         // start the trip session to being receiving location updates in free drive
         // and later when a route is set also receiving route progress updates
         mapboxNavigation.startTripSession()
+        addressFrom.setText(addressFrom.text.toString()+" "+post.getAddressFrom()["Address"]+", đường "+ post.getAddressFrom()["Streets"] +", phường "+ post.getAddressFrom()["Wards"] +", quận "+post.getAddressFrom()["District"]+", "+post.getAddressFrom()["City"])
+        addressTo.setText(addressTo.text.toString()+" "+post.getAddressTo()["Address"]+", đường "+post.getAddressTo().get("Streets")+", phường " +post.getAddressTo().get("Wards")+", quận "+post.getAddressTo().get("District")+", "+post.getAddressTo().get("City"))
+        type.setText(type.text.toString()+post.description)
+        message.setOnClickListener(View.OnClickListener {  })
     }
 
     private fun onMapReady() {
@@ -509,7 +496,7 @@ class MapActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         mapboxNavigation.registerRoutesObserver(routesObserver)
-//        mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
+        mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
         mapboxNavigation.registerLocationObserver(locationObserver)
         mapboxNavigation.registerRouteProgressObserver(replayProgressObserver)
         searchRequestTask = searchEngine.search(
@@ -581,7 +568,6 @@ class MapActivity : AppCompatActivity() {
     // set routes, where the first route in the list is the primary route that
     // will be used for active guidance
         mapboxNavigation.setRoutes(routes)
-        Log.d("Routessssss", routes.toString())
     // start location simulation along the primary route
         startSimulation(routes.first())
 
@@ -600,9 +586,7 @@ class MapActivity : AppCompatActivity() {
         mapboxReplayer.stop()
 
         // hide UI elements
-//        maneuverView.visibility = View.INVISIBLE
         routeOverview.visibility = View.INVISIBLE
-//        tripProgressCard.visibility = View.INVISIBLE
     }
     private fun startSimulation(route: DirectionsRoute) {
         mapboxReplayer.run {
