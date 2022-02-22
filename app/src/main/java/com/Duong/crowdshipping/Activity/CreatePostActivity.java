@@ -55,6 +55,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.mapbox.search.MapboxSearchSdk;
+import com.mapbox.search.ResponseInfo;
+import com.mapbox.search.SearchEngine;
+import com.mapbox.search.SearchOptions;
+import com.mapbox.search.SearchRequestTask;
+import com.mapbox.search.SearchSelectionCallback;
+import com.mapbox.search.result.SearchResult;
+import com.mapbox.search.result.SearchSuggestion;
 import com.smarteist.autoimageslider.Transformations.CubeInRotationTransformation;
 
 import java.io.IOException;
@@ -90,6 +98,7 @@ public class CreatePostActivity extends AppCompatActivity {
     List<City> city = new ArrayList<>();
     List<District> districts = new ArrayList<>();
     String[] cityName, districtName, wardsName, streetName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1073,6 +1082,7 @@ public class CreatePostActivity extends AppCompatActivity {
                         AddressTo.put("Wards", wardsTo);
                         AddressTo.put("Streets", streetTo);
                         AddressTo.put("Address", addressTo);
+
                         if(finalI+1==imagePath.size()){
                             postToDatabase(pd,type,item,AddressFrom,AddressTo,phoneFrom,phoneTo,spinnerType,spinnerShip);
                         }

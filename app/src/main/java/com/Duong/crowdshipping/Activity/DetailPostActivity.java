@@ -32,12 +32,23 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mapbox.android.core.location.LocationEngineProvider;
+import com.mapbox.geojson.Point;
+import com.mapbox.search.MapboxSearchSdk;
+import com.mapbox.search.ResponseInfo;
+import com.mapbox.search.SearchEngine;
+import com.mapbox.search.SearchOptions;
+import com.mapbox.search.SearchRequestTask;
+import com.mapbox.search.SearchSelectionCallback;
+import com.mapbox.search.result.SearchResult;
+import com.mapbox.search.result.SearchSuggestion;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class DetailPostActivity extends AppCompatActivity {
@@ -50,6 +61,9 @@ public class DetailPostActivity extends AppCompatActivity {
     TextView getPost;
     String Type;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private SearchEngine searchEngine;
+    private SearchRequestTask searchRequestTask;
+    private List<Point> targetPoint = new ArrayList<>();
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -110,6 +124,26 @@ public class DetailPostActivity extends AppCompatActivity {
         }else if(Type.equals("Complete")){
             getPost.setVisibility(View.GONE);
         }
+        try {
+            MapboxSearchSdk.initialize(getApplication(),
+                    getString(R.string.mapbox_access_token),
+                    LocationEngineProvider.getBestLocationEngine(this));
+
+        }catch (Exception e){
+            Log.d("Already initialized", e.toString());
+        }
+        searchEngine = MapboxSearchSdk.getSearchEngine();
+
+        final SearchOptions options = new SearchOptions.Builder()
+                .limit(5)
+                .build();
+
+        searchRequestTask = searchEngine.search(post.getAddressTo().get("Address")+", đường "+post.getAddressTo().get("Streets")
+                +", phường " +post.getAddressTo().get("Wards")+", quận "+post.getAddressTo().get("District")+
+                ", "+post.getAddressTo().get("City"), options, searchCallback);
+        searchRequestTask = searchEngine.search(post.getAddressFrom().get("Address")+", đường "+post.getAddressFrom().get("Streets")
+                +", phường " +post.getAddressFrom().get("Wards")+", quận "+post.getAddressFrom().get("District")+
+                ", "+post.getAddressFrom().get("City"), options, searchCallback);
     }
 
     private void getPostclick(String type) {
@@ -207,6 +241,8 @@ public class DetailPostActivity extends AppCompatActivity {
                             sendMessage(post.getCreateID(),user.getUid(),msg);
                             Intent intent = new Intent(DetailPostActivity.this, MapActivity.class);
                             intent.putExtra("Post", (Serializable) post);
+                            intent.putExtra("TargetTo", targetPoint.get(1));
+                            intent.putExtra("TargetFrom", targetPoint.get(0));
                             startActivity(intent);
                         }
                     }
@@ -261,5 +297,36 @@ public class DetailPostActivity extends AppCompatActivity {
         chatRefReceiver.child("id").setValue(user.getUid());
         final String message = msg;
 
+    }
+    private final SearchSelectionCallback searchCallback = new SearchSelectionCallback() {
+        @Override
+        public void onSuggestions(@NonNull List<? extends SearchSuggestion> suggestions, @NonNull ResponseInfo responseInfo) {
+            if (suggestions.isEmpty()) {
+                Log.i("SearchApiExample", "No suggestions found");
+            } else {
+                Log.i("SearchApiExample", "Search suggestions: " + suggestions + "\nSelecting first...");
+                searchRequestTask = searchEngine.select(suggestions.get(0), this);
+            }
+        }
+        @Override
+        public void onCategoryResult(@NonNull SearchSuggestion searchSuggestion, @NonNull List<? extends SearchResult> list, @NonNull ResponseInfo responseInfo) {
+            Log.i("SearchApiExample", "Category search results: " + list);
+        }
+
+        @Override
+        public void onResult(@NonNull SearchSuggestion suggestion, @NonNull SearchResult result, @NonNull ResponseInfo info) {
+            targetPoint.add(result.getCoordinate());
+            Log.i("SearchApiExample", "Search result: " + targetPoint);
+        }
+
+        @Override
+        public void onError(@NonNull Exception e) {
+            Log.i("SearchApiExample", "Search error: ", e);
+        }
+    };
+    @Override
+    protected void onDestroy() {
+        searchRequestTask.cancel();
+        super.onDestroy();
     }
 }

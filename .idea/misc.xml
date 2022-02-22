@@ -49,6 +49,7 @@
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/drawable/ic_round_article_24.xml" value="0.22135416666666666" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/drawable/ic_round_border_color_24.xml" value="0.22135416666666666" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/drawable/ic_round_call_24.xml" value="0.21875" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/drawable/ic_round_call_24_green.xml" value="0.19114583333333332" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/drawable/ic_round_chat_24.xml" value="0.22135416666666666" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/drawable/ic_round_home_24.xml" value="0.22135416666666666" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/drawable/ic_round_mark_unread_chat_alt_24.xml" value="0.22135416666666666" />
@@ -74,6 +75,7 @@
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/activity_setting.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/activity_view_picture.xml" value="0.3625" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/body_detail_post.xml" value="0.2453125" />
+        <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/bottom_popup.xml" value="0.46450809464508097" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/chat_item_left.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/confirm_layout.xml" value="0.20520833333333333" />
         <entry key="..\:/Androidapp/CrowdShipping2/app/src/main/res/layout/fragment_account.xml" value="0.20520833333333333" />

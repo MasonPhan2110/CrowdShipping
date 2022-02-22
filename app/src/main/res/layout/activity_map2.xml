@@ -19,8 +19,8 @@
         android:id="@+id/routeOverview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="8dp"
         android:visibility="invisible"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true" />
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/routeOverview"
         android:layout_alignParentRight="true"
@@ -104,9 +104,9 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/background_btn_green"
             android:text="Di chuyển đến chỗ nhận hàng"
-            android:textSize="16dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
+            android:textSize="16dp"
             app:layout_widthPercent="64%" />
 
         <ImageView

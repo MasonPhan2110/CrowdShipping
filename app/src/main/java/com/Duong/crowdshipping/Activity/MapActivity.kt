@@ -11,9 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
@@ -21,6 +18,7 @@ import androidx.core.content.ContextCompat
 import com.Duong.crowdshipping.R
 import com.Duong.crowdshipping.model.Post
 import com.Duong.crowdshipping.utils.LocationPermissionHelper
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.api.directions.v5.models.Bearing
@@ -78,11 +76,21 @@ import com.mapbox.navigation.ui.tripprogress.model.*
 import com.mapbox.api.directions.v5.models.RouteOptions
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
 import com.mapbox.navigation.utils.internal.toPoint
+import android.R.attr.name
+import android.content.DialogInterface
+import android.net.Uri
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.HashMap
+
 
 class MapActivity : AppCompatActivity() {
-    private lateinit var searchEngine: SearchEngine
-    private lateinit var searchRequestTask: SearchRequestTask
-    private lateinit var  currentLocation:Point
     private lateinit var  targetLocation :Point
     private companion object {
         private const val BUTTON_ANIMATION_DURATION = 1500L
@@ -139,29 +147,43 @@ class MapActivity : AppCompatActivity() {
 
         override fun onNewRawLocation(rawLocation: Location) {
         // not handled
-            Log.d("Locationnnnnn","Raw"+ rawLocation.toString())
+
         }
 
         override fun onNewLocationMatcherResult(locationMatcherResult: LocationMatcherResult) {
             val enhancedLocation = locationMatcherResult.enhancedLocation
             // update location puck's position on the map
-
-            // update camera position to account for new location
-            Log.d("IsOffRoad",locationMatcherResult.isOffRoad.toString())
-            if(locationMatcherResult.isOffRoad){
-                Log.d("IsOffRoad",locationMatcherResult.isOffRoad.toString())
+            val currLat = BigDecimal(enhancedLocation.latitude).setScale(3,RoundingMode.HALF_EVEN)
+            val currLng = BigDecimal(enhancedLocation.longitude).setScale(3,RoundingMode.HALF_EVEN)
+            if(currLat == BigDecimal(targetFrom.latitude()).setScale(3,RoundingMode.HALF_EVEN)&&
+                currLng == BigDecimal(targetFrom.longitude()).setScale(3,RoundingMode.HALF_EVEN)&&
+                    btn.text.equals("Di chuyển đến chỗ nhận hàng")){
+                btn.setText("Đã lấy hàng")
             }
+            if(currLat == BigDecimal(targetTo.latitude()).setScale(3,RoundingMode.HALF_EVEN)&&
+                currLng == BigDecimal(targetTo.longitude()).setScale(3,RoundingMode.HALF_EVEN)&&
+                btn.text.equals("Di chuyển đến chỗ giao hàng")){
+                btn.setText("Đã giao hàng")
+
+            }
+//            // update camera position to account for new location
+//            Log.d("LocationnnnnCurr", currLat.toString()+"-"+currLng.toString())
+//            Log.d("LocationnnnnTar", BigDecimal(targetFrom.latitude()).setScale(6,RoundingMode.HALF_EVEN).toString()+"-"+
+//                    BigDecimal(targetFrom.longitude()).setScale(6,RoundingMode.HALF_EVEN).toString())
             navigationLocationProvider.changePosition(
                 location = enhancedLocation,
                 keyPoints = locationMatcherResult.keyPoints,
             )
+
             Log.d("Routessssss",locationMatcherResult.toString())
             viewportDataSource.onLocationChanged(enhancedLocation)
             viewportDataSource.evaluate()
 
+
             // if this is the first location update the activity has received,
             // it's best to immediately move the camera to the current user location
             if (!firstLocationUpdateReceived) {
+
                 firstLocationUpdateReceived = true
                 navigationCamera.requestNavigationCameraToOverview(
                     stateTransitionOptions = NavigationCameraTransitionOptions.Builder()
@@ -169,6 +191,7 @@ class MapActivity : AppCompatActivity() {
                         .build()
                 )
             }
+
         }
     }
     private val routeProgressObserver = RouteProgressObserver { routeProgress ->
@@ -215,70 +238,10 @@ class MapActivity : AppCompatActivity() {
             viewportDataSource.evaluate()
         }
     }
-    private val searchCallback = object : SearchSelectionCallback {
-        override fun onSuggestions(suggestions: List<SearchSuggestion>, responseInfo: ResponseInfo) {
-            if (suggestions.isEmpty()) {
-                Log.i("SearchApiExample", "No suggestions found")
-            } else {
-                Log.i("SearchApiExampl4e", "Search suggestions: $suggestions.\nSelecting first suggestion...")
-                searchRequestTask = searchEngine.select(suggestions.first(), this)
-            }
-        }
 
-        override fun onResult(
-            suggestion: SearchSuggestion,
-            result: SearchResult,
-            responseInfo: ResponseInfo
-        ) {
-            Log.i("SearchApiExample", "Search result: ${result.coordinate}")
-            targetLocation = result.coordinate!!
-            findRoute(targetLocation)
-        }
-
-        override fun onCategoryResult(
-            suggestion: SearchSuggestion,
-            results: List<SearchResult>,
-            responseInfo: ResponseInfo
-        ) {
-            Log.i("SearchApiExample", "Category search results: $results")
-        }
-
-        override fun onError(e: Exception) {
-            Log.i("SearchApiExample", "Search error", e)
-        }
-    }
     private lateinit var locationPermissionHelper: LocationPermissionHelper
 
-    private val onIndicatorPositionChangedListener = OnIndicatorPositionChangedListener {
-        currentLocation = it
-        if (mapboxNavigation.getRoutes().isEmpty()) {
-            // if simulation is enabled (ReplayLocationEngine set to NavigationOptions)
-            // but we're not simulating yet,
-            // push a single location sample to establish origin
-            mapboxReplayer.pushEvents(
-                listOf(
-                    ReplayRouteMapper.mapToUpdateLocation(
-                        eventTimestamp = 0.0,
-                        point = currentLocation
-                    )
-                )
-            )
-            mapboxReplayer.playFirstLocation()
-        }
 
-    }
-
-    private val onMoveListener = object : OnMoveListener {
-        override fun onMoveBegin(detector: MoveGestureDetector) {
-            onCameraTrackingDismissed()
-        }
-
-        override fun onMove(detector: MoveGestureDetector): Boolean {
-            return false
-        }
-
-        override fun onMoveEnd(detector: MoveGestureDetector) {}
-    }
     private lateinit var mapView: MapView
     private lateinit var recenter:MapboxRecenterButton
     private lateinit var  routeOverview: MapboxRouteOverviewButton
@@ -288,6 +251,12 @@ class MapActivity : AppCompatActivity() {
     private lateinit var type: TextView
     private lateinit var message: ImageView
     private lateinit var call : ImageView
+    private lateinit var btn:Button
+    private lateinit var targetFrom:Point
+    private lateinit var targetTo:Point
+    private lateinit var  reference: DatabaseReference
+    private lateinit var hashMap:HashMap<String,Any>
+
 //    private lateinit var tripProgressCard: CardView
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -296,18 +265,9 @@ class MapActivity : AppCompatActivity() {
 
         val intent = intent
         post = (intent.getSerializableExtra("Post") as Post?)!!
-        try {
-            MapboxSearchSdk.initialize(
-                application = application,
-                accessToken = getString(R.string.mapbox_access_token),
-                locationEngine = LocationEngineProvider.getBestLocationEngine(this)
-            )
-        }catch (e : java.lang.Exception){
-            Log.d("Already initialized", e.toString())
-        }
+        targetFrom = intent.getSerializableExtra("TargetFrom") as Point
+        targetTo = intent.getSerializableExtra("TargetTo") as Point
 
-
-        searchEngine = MapboxSearchSdk.getSearchEngine()
         mapView = findViewById(R.id.mapView)
         recenter = findViewById(R.id.recenter)
         routeOverview = findViewById(R.id.routeOverview)
@@ -316,6 +276,7 @@ class MapActivity : AppCompatActivity() {
         type = findViewById(R.id.type)
         message = findViewById(R.id.btnMSG)
         call = findViewById(R.id.btnCall)
+        btn = findViewById(R.id.button)
         locationPermissionHelper = LocationPermissionHelper(WeakReference(this))
         locationPermissionHelper.checkPermissions {
             onMapReady()
@@ -327,7 +288,7 @@ class MapActivity : AppCompatActivity() {
                 NavigationOptions.Builder(this.applicationContext)
                     .accessToken(getString(R.string.mapbox_access_token))
             // comment out the location engine setting block to disable simulation
-//                    .locationEngine(replayLocationEngine)
+                    .locationEngine(replayLocationEngine)
                     .build()
             )
         }
@@ -415,68 +376,107 @@ class MapActivity : AppCompatActivity() {
         addressFrom.setText(addressFrom.text.toString()+" "+post.getAddressFrom()["Address"]+", đường "+ post.getAddressFrom()["Streets"] +", phường "+ post.getAddressFrom()["Wards"] +", quận "+post.getAddressFrom()["District"]+", "+post.getAddressFrom()["City"])
         addressTo.setText(addressTo.text.toString()+" "+post.getAddressTo()["Address"]+", đường "+post.getAddressTo().get("Streets")+", phường " +post.getAddressTo().get("Wards")+", quận "+post.getAddressTo().get("District")+", "+post.getAddressTo().get("City"))
         type.setText(type.text.toString()+post.description)
-        message.setOnClickListener(View.OnClickListener {  })
+        message.setOnClickListener(View.OnClickListener {
+            val intent = Intent(this, MessageActivity::class.java)
+            intent.putExtra("userid", post.createID)
+            startActivity(intent)
+        })
+        call.setOnClickListener(View.OnClickListener {
+            val dialog = BottomSheetDialog(this)
+            val view = layoutInflater.inflate(R.layout.bottom_popup, null)
+            val phoneFrom = view.findViewById<TextView>(R.id.phoneFrom)
+            val phoneTo = view.findViewById<TextView>(R.id.phoneTo)
+            val phoneFromWrap = view.findViewById<LinearLayout>(R.id.phoneFromWrap)
+            val phoneToWrap = view.findViewById<LinearLayout>(R.id.phoneToWrap)
+            phoneFrom.setText(phoneFrom.text.toString()+post.phoneFrom)
+            phoneTo.setText(phoneTo.text.toString()+post.phoneTo)
+            phoneFromWrap.setOnClickListener {
+                val intent = Intent(Intent.ACTION_DIAL)
+                intent.data = Uri.parse("tel:"+post.phoneFrom)
+                startActivity(intent)
+            }
+            phoneToWrap.setOnClickListener {
+                val intent = Intent(Intent.ACTION_DIAL)
+                intent.data = Uri.parse("tel:"+post.phoneTo)
+                startActivity(intent)
+            }
+            dialog.setContentView(view)
+            dialog.show()
+        })
+        btn.setOnClickListener {
+            if(btn.text.equals("Đã lấy hàng")){
+                val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                val currentDateandTime = sdf.format(Date())
+                reference =
+                    FirebaseDatabase.getInstance().getReference("Notification").child(post.createID)
+                val pushedPostRef: DatabaseReference = reference.push()
+                hashMap = HashMap<String, Any>()
+                hashMap.put("MSG", "Người giao hàng cho đơn hàng "+ post.postID+" đã đến")
+                hashMap.put("PostID", post.postID)
+                hashMap.put("Time", currentDateandTime)
+                pushedPostRef.key?.let { it1 -> hashMap.put("NotiID", it1) }
+                hashMap.put("isseen", false)
+                pushedPostRef.setValue(hashMap)
+                btn.setText("Di chuyển đến chỗ giao hàng")
+                clearRouteAndStopNavigation()
+                findRoute(targetTo)
+            }
+            if(btn.text.equals("Đã giao hàng")){
+                AlertDialog.Builder(this@MapActivity)
+                    .setTitle("Thông báo")
+                    .setMessage("Sau khi giao hàng thành công bạn cần đợi chủ đơn hàng xác nhận thành công để hoàn tất đơn hàng.") // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setPositiveButton(
+                        android.R.string.yes
+                    ) { dialogInterface, i ->
+                        clearRouteAndStopNavigation()
+                        finish()
+                    }.setNegativeButton(android.R.string.no, null)
+                    .show()
+            }
+
+        }
     }
 
     private fun onMapReady() {
-        onCameraTrackingDismissed()
+
         mapView.getMapboxMap().setCamera(
             CameraOptions.Builder()
-                .zoom(14.0)
+                .zoom(10.0)
                 .build()
         )
         mapView.getMapboxMap().loadStyleUri(
             Style.MAPBOX_STREETS
         ) {
-            initLocationComponent()
+            findRoute(targetFrom)
+        }
+        mapView.location.apply {
+            setLocationProvider(navigationLocationProvider)
+
+        // Uncomment this block of code if you want to see a circular puck with arrow.
+
+        locationPuck = LocationPuck2D(
+        bearingImage = ContextCompat.getDrawable(
+        this@MapActivity,
+        R.drawable.mapbox_navigation_puck_icon
+        )
+        )
+
+
+        // When true, the blue circular puck is shown on the map. If set to false, user
+        // location in the form of puck will not be shown on the map.
+            enabled = true
         }
     }
 
 
-    private fun initLocationComponent() {
-        val locationComponentPlugin = mapView.location
 
-        locationComponentPlugin.updateSettings {
-            this.enabled = true
-            this.locationPuck = LocationPuck2D(
-                bearingImage = AppCompatResources.getDrawable(
-                    this@MapActivity,
-                    R.drawable.mapbox_user_puck_icon,
-                ),
-                shadowImage = AppCompatResources.getDrawable(
-                    this@MapActivity,
-                    R.drawable.mapbox_user_icon_shadow,
-                ),
-                scaleExpression = interpolate {
-                    linear()
-                    zoom()
-                    stop {
-                        literal(0.0)
-                        literal(0.6)
-                    }
-                    stop {
-                        literal(20.0)
-                        literal(1.0)
-                    }
-                }.toJson()
-            )
-        }
-        locationComponentPlugin.addOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
-    }
 
-    private fun onCameraTrackingDismissed() {
-//        Toast.makeText(this, "onCameraTrackingDismissed", Toast.LENGTH_SHORT).show()
-        mapView.location
-            .removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
-        mapView.gestures.removeOnMoveListener(onMoveListener)
-    }
+
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView.location
-            .removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
-        mapView.gestures.removeOnMoveListener(onMoveListener)
-        searchRequestTask.cancel()
         MapboxNavigationProvider.destroy()
         mapboxReplayer.finish()
         maneuverApi.cancel()
@@ -499,11 +499,22 @@ class MapActivity : AppCompatActivity() {
         mapboxNavigation.registerRouteProgressObserver(routeProgressObserver)
         mapboxNavigation.registerLocationObserver(locationObserver)
         mapboxNavigation.registerRouteProgressObserver(replayProgressObserver)
-        searchRequestTask = searchEngine.search(
-            "Vincom Trần Duy Hưng",
-            SearchOptions(limit = 3),
-            searchCallback
-        )
+
+        if (mapboxNavigation.getRoutes().isEmpty()) {
+            // if simulation is enabled (ReplayLocationEngine set to NavigationOptions)
+            // but we're not simulating yet,
+            // push a single location sample to establish origin
+            mapboxReplayer.pushEvents(
+                listOf(
+                    ReplayRouteMapper.mapToUpdateLocation(
+                        eventTimestamp = 0.0,
+                        point =Point.fromLngLat(105.800808, 21.039982)
+                    )
+                )
+            )
+            mapboxReplayer.playFirstLocation()
+        }
+
 
     }
 
@@ -516,7 +527,7 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun findRoute(destination: Point) {
-
+        Log.d("LastLocation", navigationLocationProvider.lastLocation.toString())
         val originLocation = navigationLocationProvider.lastLocation
         val originPoint = originLocation?.let {
             Point.fromLngLat(it.longitude, it.latitude)
@@ -576,7 +587,7 @@ class MapActivity : AppCompatActivity() {
 //        tripProgressCard.visibility = View.VISIBLE
 
 // move the camera to overview when new route is available
-        navigationCamera.requestNavigationCameraToOverview()
+//        navigationCamera.requestNavigationCameraToOverview()
     }
     private fun clearRouteAndStopNavigation() {
         // clear
