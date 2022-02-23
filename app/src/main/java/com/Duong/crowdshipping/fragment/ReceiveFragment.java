@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mapbox.search.ResponseInfo;
+import com.mapbox.search.SearchEngine;
+import com.mapbox.search.SearchRequestTask;
+import com.mapbox.search.SearchSelectionCallback;
+import com.mapbox.search.result.SearchResult;
+import com.mapbox.search.result.SearchSuggestion;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +41,7 @@ public class ReceiveFragment extends Fragment {
     RecyclerView recycleView;
     SwipeRefreshLayout refresh;
     LinearLayoutManager linearLayoutManager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -82,7 +90,7 @@ public class ReceiveFragment extends Fragment {
                 mPost.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Post post = dataSnapshot.getValue(Post.class);
-                    if(user.getUid().equals(post.getShipper())&& post.getStatus().equals("1")){
+                    if(user.getUid().equals(post.getShipper())&& post.getStatus().equals("1")||post.getStatus().equals("2")){
                         mPost.add(post);
                     }
                 }
@@ -96,4 +104,5 @@ public class ReceiveFragment extends Fragment {
             }
         });
     }
+
 }

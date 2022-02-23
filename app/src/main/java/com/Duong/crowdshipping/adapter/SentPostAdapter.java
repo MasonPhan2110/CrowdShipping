@@ -1,5 +1,6 @@
 package com.Duong.crowdshipping.adapter;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -14,12 +15,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Duong.crowdshipping.Activity.DetailPostActivity;
+import com.Duong.crowdshipping.Activity.MapActivity;
 import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.model.Post;
 import com.Duong.crowdshipping.model.SliderData;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mapbox.android.core.location.LocationEngineProvider;
+import com.mapbox.geojson.Point;
+import com.mapbox.search.MapboxSearchSdk;
+import com.mapbox.search.ResponseInfo;
+import com.mapbox.search.SearchEngine;
+import com.mapbox.search.SearchOptions;
+import com.mapbox.search.SearchRequestTask;
+import com.mapbox.search.SearchSelectionCallback;
+import com.mapbox.search.result.SearchResult;
+import com.mapbox.search.result.SearchSuggestion;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -33,6 +45,9 @@ public class SentPostAdapter extends   RecyclerView.Adapter<RecyclerView.ViewHol
     private Context mcontext;
     private List<Post> mPost;
     private String Type;
+    private SearchEngine searchEngine;
+    private SearchRequestTask searchRequestTask;
+    private List<Point> targetPoint = new ArrayList<>();
     public SentPostAdapter(Context mcontext, List<Post> mPost,String type){
         this.mcontext = mcontext;
         this.mPost = mPost;
@@ -122,15 +137,48 @@ public class SentPostAdapter extends   RecyclerView.Adapter<RecyclerView.ViewHol
             itemHolder.to.setText("Đến: " +post.getAddressTo().get("Wards")+", "+post.getAddressTo().get("District")+", "+post.getAddressTo().get("City"));
             itemHolder.type.setText("Loại hàng hóa: "+type[1]);
             itemHolder.time.setText(timeSubtract);
-            itemHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(mcontext, DetailPostActivity.class);
-                    intent.putExtra("Post", (Serializable) post);
-                    intent.putExtra("Type", Type);
-                    mcontext.startActivity(intent);
+            if(Type.equals("Receive")){
+                try {
+                    MapboxSearchSdk.initialize((Application) mcontext.getApplicationContext(),
+                            mcontext.getString(R.string.mapbox_access_token),
+                            LocationEngineProvider.getBestLocationEngine(mcontext));
+
+                }catch (Exception e){
+                    Log.d("Already initialized", e.toString());
                 }
-            });
+                searchEngine = MapboxSearchSdk.getSearchEngine();
+
+                final SearchOptions options = new SearchOptions.Builder()
+                        .limit(5)
+                        .build();
+                searchRequestTask = searchEngine.search(post.getAddressTo().get("Address")+", đường "+post.getAddressTo().get("Streets")
+                        +", phường " +post.getAddressTo().get("Wards")+", quận "+post.getAddressTo().get("District")+
+                        ", "+post.getAddressTo().get("City"), options, searchCallback);
+                searchRequestTask = searchEngine.search(post.getAddressFrom().get("Address")+", đường "+post.getAddressFrom().get("Streets")
+                        +", phường " +post.getAddressFrom().get("Wards")+", quận "+post.getAddressFrom().get("District")+
+                        ", "+post.getAddressFrom().get("City"), options, searchCallback);
+                itemHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(mcontext, MapActivity.class);
+                        intent.putExtra("Post", (Serializable) post);
+                        intent.putExtra("TargetTo", targetPoint.get(1));
+                        intent.putExtra("TargetFrom", targetPoint.get(0));
+                        mcontext.startActivity(intent);
+                    }
+                });
+            }else{
+                itemHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(mcontext, DetailPostActivity.class);
+                        intent.putExtra("Post", (Serializable) post);
+                        intent.putExtra("Type", Type);
+                        mcontext.startActivity(intent);
+                    }
+                });
+            }
+
         }
     }
 
@@ -158,4 +206,30 @@ public class SentPostAdapter extends   RecyclerView.Adapter<RecyclerView.ViewHol
             linear1 = itemView.findViewById(R.id.linear1);
         }
     }
+    private final SearchSelectionCallback searchCallback = new SearchSelectionCallback() {
+        @Override
+        public void onSuggestions(@NonNull List<? extends SearchSuggestion> suggestions, @NonNull ResponseInfo responseInfo) {
+            if (suggestions.isEmpty()) {
+                Log.i("SearchApiExample", "No suggestions found");
+            } else {
+                Log.i("SearchApiExample", "Search suggestions: " + suggestions + "\nSelecting first...");
+                searchRequestTask = searchEngine.select(suggestions.get(0), this);
+            }
+        }
+        @Override
+        public void onCategoryResult(@NonNull SearchSuggestion searchSuggestion, @NonNull List<? extends SearchResult> list, @NonNull ResponseInfo responseInfo) {
+            Log.i("SearchApiExample", "Category search results: " + list);
+        }
+
+        @Override
+        public void onResult(@NonNull SearchSuggestion suggestion, @NonNull SearchResult result, @NonNull ResponseInfo info) {
+            targetPoint.add(result.getCoordinate());
+            Log.i("SearchApiExample", "Search result: " + targetPoint);
+        }
+
+        @Override
+        public void onError(@NonNull Exception e) {
+            Log.i("SearchApiExample", "Search error: ", e);
+        }
+    };
 }

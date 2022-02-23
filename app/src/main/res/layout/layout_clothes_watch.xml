@@ -173,6 +173,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:spinnerMode="dropdown"/>
+            <CheckBox android:id="@+id/checkbox_fragile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hàng dễ vỡ"
+                android:textSize="17dp"
+                android:layout_marginTop="7dp"/>
         </LinearLayout>
     </ScrollView>
 

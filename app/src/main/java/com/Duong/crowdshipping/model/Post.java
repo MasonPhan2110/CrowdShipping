@@ -17,8 +17,11 @@ public class Post implements Serializable {
     private String PostID;
     private String Shipper;
     private String Status;
+    private Boolean Fragile;
 
-    public Post(String Shipper, String Status,String CreateID,HashMap<String, Object> linkImage,HashMap<String,String> AddressFrom,HashMap<String,String> AddressTo,String phoneFrom,String phoneTo,String Type,String Description,String Ship,String Time, String PostID){
+    public Post(String Shipper, String Status,String CreateID,HashMap<String, Object> linkImage,
+                HashMap<String,String> AddressFrom,HashMap<String,String> AddressTo,String phoneFrom,String phoneTo,
+                String Type,String Description,String Ship,String Time, String PostID, Boolean Fragile){
         this.CreateID= CreateID;
         this.linkImage= linkImage;
         this.AddressFrom= AddressFrom;
@@ -32,8 +35,17 @@ public class Post implements Serializable {
         this.PostID = PostID;
         this.Shipper = Shipper;
         this.Status = Status;
+        this.Fragile = Fragile;
     }
     public Post() {
+    }
+
+    public Boolean getFragile() {
+        return Fragile;
+    }
+
+    public void setFragile(Boolean fragile) {
+        Fragile = fragile;
     }
 
     public String getShipper() {

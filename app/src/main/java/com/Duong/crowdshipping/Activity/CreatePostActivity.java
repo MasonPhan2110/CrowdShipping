@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -174,6 +175,7 @@ public class CreatePostActivity extends AppCompatActivity {
                    addressTo = view.findViewById(R.id.addressTo);
                    phoneFrom = view.findViewById(R.id.phoneTo);
                    get_image = view.findViewById(R.id.btn_get_img);
+                   CheckBox checkbox_clothes_fragile = view.findViewById(R.id.checkbox_fragile);
                    ArrayAdapter clothesAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
                    ArrayAdapter shipCostAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
                    spinner.setAdapter(clothesAdapter);
@@ -317,7 +319,8 @@ public class CreatePostActivity extends AppCompatActivity {
                                        spinner_clothes_wardsFrom.getSelectedItem().toString(),
                                        spinner_clothes_wardsTo.getSelectedItem().toString(),
                                        spinner_clothes_streetFrom.getSelectedItem().toString(),
-                                       spinner_clothes_streetTo.getSelectedItem().toString());
+                                       spinner_clothes_streetTo.getSelectedItem().toString(),
+                                       checkbox_clothes_fragile.isChecked());
                            }
                        }
                    });
@@ -343,6 +346,8 @@ public class CreatePostActivity extends AppCompatActivity {
 
                    Spinner spinner_watch = view1.findViewById((R.id.drop_down_watch));
                    Spinner spinner_ship_cost_watch = view1.findViewById(R.id.drop_down_ship_cost);
+
+                   CheckBox checkbox_watch_fragile = view1.findViewById(R.id.checkbox_fragile);
                    addressFrom = view1.findViewById(R.id.addressFrom);
                    addressTo = view1.findViewById(R.id.addressTo);
                    phoneFrom = view1.findViewById(R.id.phoneFrom);
@@ -488,7 +493,7 @@ public class CreatePostActivity extends AppCompatActivity {
                                        spinner_watch_wardsFrom.getSelectedItem().toString(),
                                        spinner_watch_wardsTo.getSelectedItem().toString(),
                                        spinner_watch_streetFrom.getSelectedItem().toString(),
-                                       spinner_watch_streetTo.getSelectedItem().toString());
+                                       spinner_watch_streetTo.getSelectedItem().toString(),checkbox_watch_fragile.isChecked());
                            }
                        }
                    });
@@ -511,6 +516,8 @@ public class CreatePostActivity extends AppCompatActivity {
                    phoneFrom = view2.findViewById(R.id.phoneFrom);
                    phoneTo = view2.findViewById(R.id.phoneTo);
                    get_image = view2.findViewById(R.id.btn_get_img);
+
+                   CheckBox checkbox_shoes_fragile = view2.findViewById(R.id.checkbox_fragile);
 
                    ArrayAdapter shoesAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,shoesType);
                    ArrayAdapter shipCostAdapter2 = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,payshipType);
@@ -655,7 +662,8 @@ public class CreatePostActivity extends AppCompatActivity {
                                        spinner_shoes_wardsFrom.getSelectedItem().toString(),
                                        spinner_shoes_wardsTo.getSelectedItem().toString(),
                                        spinner_shoes_streetFrom.getSelectedItem().toString(),
-                                       spinner_shoes_streetTo.getSelectedItem().toString());
+                                       spinner_shoes_streetTo.getSelectedItem().toString(),
+                                       checkbox_shoes_fragile.isChecked());
                            }
                        }
                    });
@@ -686,6 +694,7 @@ public class CreatePostActivity extends AppCompatActivity {
                     addressTo = view.findViewById(R.id.addressTo);
                     phoneFrom = view.findViewById(R.id.phoneTo);
                     get_image = view.findViewById(R.id.btn_get_img);
+                    CheckBox checkbox_clothes_fragile = view.findViewById(R.id.checkbox_fragile);
                     ArrayAdapter clothesAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
                     ArrayAdapter shipCostAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,clothesType);
                     spinner.setAdapter(clothesAdapter);
@@ -829,7 +838,8 @@ public class CreatePostActivity extends AppCompatActivity {
                                         spinner_clothes_wardsFrom.getSelectedItem().toString(),
                                         spinner_clothes_wardsTo.getSelectedItem().toString(),
                                         spinner_clothes_streetFrom.getSelectedItem().toString(),
-                                        spinner_clothes_streetTo.getSelectedItem().toString());
+                                        spinner_clothes_streetTo.getSelectedItem().toString(),
+                                        checkbox_clothes_fragile.isChecked());
                             }
                         }
                     });
@@ -860,6 +870,7 @@ public class CreatePostActivity extends AppCompatActivity {
                     phoneFrom = view1.findViewById(R.id.phoneFrom);
                     phoneTo = view1.findViewById(R.id.phoneTo);
                     get_image = view1.findViewById(R.id.btn_get_img);
+                    CheckBox checkbox_watch_fragile = view1.findViewById(R.id.checkbox_fragile);
 
 
                     ArrayAdapter watchAdapter = new ArrayAdapter(CreatePostActivity.this,android.R.layout.simple_spinner_item,watchType);
@@ -1000,7 +1011,8 @@ public class CreatePostActivity extends AppCompatActivity {
                                         spinner_watch_wardsFrom.getSelectedItem().toString(),
                                         spinner_watch_wardsTo.getSelectedItem().toString(),
                                         spinner_watch_streetFrom.getSelectedItem().toString(),
-                                        spinner_watch_streetTo.getSelectedItem().toString());
+                                        spinner_watch_streetTo.getSelectedItem().toString(),
+                                        checkbox_watch_fragile.isChecked());
                             }
                         }
                     });
@@ -1044,7 +1056,7 @@ public class CreatePostActivity extends AppCompatActivity {
     }
 
     private void postClick(String type, String item, String addressFrom,String addressTo,String phoneFrom,String phoneTo,String spinnerType,String spinnerShip,
-                            String cityFrom, String cityTo, String districtFrom, String districtTo,String wardsFrom,String wardsTo,String streetFrom,String streetTo) {
+                            String cityFrom, String cityTo, String districtFrom, String districtTo,String wardsFrom,String wardsTo,String streetFrom,String streetTo, Boolean fragile) {
         //Toast.makeText(CreatePostActivity.this,type+item,Toast.LENGTH_SHORT).show();
         final ProgressDialog pd = new ProgressDialog(CreatePostActivity.this);
         pd.setMessage("Uploading...");
@@ -1084,7 +1096,7 @@ public class CreatePostActivity extends AppCompatActivity {
                         AddressTo.put("Address", addressTo);
 
                         if(finalI+1==imagePath.size()){
-                            postToDatabase(pd,type,item,AddressFrom,AddressTo,phoneFrom,phoneTo,spinnerType,spinnerShip);
+                            postToDatabase(pd,type,item,AddressFrom,AddressTo,phoneFrom,phoneTo,spinnerType,spinnerShip, fragile);
                         }
                     }
                 }
@@ -1098,7 +1110,7 @@ public class CreatePostActivity extends AppCompatActivity {
         }
 
     }
-    private void postToDatabase(ProgressDialog pd,String type, String item, HashMap<String, String> addressFrom,HashMap<String, String> addressTo,String phoneFrom,String phoneTo,String spinnerType,String spinnerShip){
+    private void postToDatabase(ProgressDialog pd,String type, String item, HashMap<String, String> addressFrom,HashMap<String, String> addressTo,String phoneFrom,String phoneTo,String spinnerType,String spinnerShip, Boolean fragile){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
         DatabaseReference pushedPostRef = reference.push();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
@@ -1116,6 +1128,7 @@ public class CreatePostActivity extends AppCompatActivity {
         hashMap.put("linkImage",imageURI);
         hashMap.put("Time", currentDateandTime);
         hashMap.put("Status", "0");
+        hashMap.put("Fragile", fragile);
         pushedPostRef.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

@@ -147,47 +147,7 @@ public class DetailPostActivity extends AppCompatActivity {
     }
 
     private void getPostclick(String type) {
-        if(type.equals("Receive")){
-            new AlertDialog.Builder(DetailPostActivity.this)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle("Thông báo")
-                    .setMessage("Đơn hàng đã được chuyển đi thành công?")
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(post.getPostID());
-                            HashMap<String, Object> hashMap = new HashMap<>();
-                            hashMap.put("Status","2");
-                            reference.updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    new AlertDialog.Builder(DetailPostActivity.this)
-                                            .setIcon(android.R.drawable.ic_dialog_alert)
-                                            .setTitle("Thông báo")
-                                            .setMessage("Bạn cần người nhận hàng xác nhận đã nhận được đã nhận được hàng với người gửi để có thể hoàn thành đơn hàng.")
-                                            .setPositiveButton("Ok", null)
-                                            .show();
-                                    getPost.setText("Đợi xác nhận");
-                                    getPost.setClickable(false);
-                                }
-                            });
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
-                            String currentDateandTime = sdf.format(new Date());
-                            reference = FirebaseDatabase.getInstance().getReference("Notification").child(post.getCreateID());
-                            DatabaseReference pushedPostRef = reference.push();
-                            hashMap = new HashMap<>();
-                            hashMap.put("MSG","Bạn cần xác nhận đơn hàng");
-                            hashMap.put("PostID",post.getPostID());
-                            hashMap.put("Time", currentDateandTime);
-                            hashMap.put("NotiID", pushedPostRef.getKey());
-                            hashMap.put("isseen",false);
-                            pushedPostRef.setValue(hashMap);
-                        }
-                    }).setNegativeButton("Close", null)
-                    .show();
-
-        }else{
-            if(post.getStatus().equals("2")){
+            if(post.getStatus().equals("3")){
                 new AlertDialog.Builder(DetailPostActivity.this)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Thông báo")
@@ -197,7 +157,7 @@ public class DetailPostActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(post.getPostID());
                                 HashMap<String, Object> hashMap = new HashMap<>();
-                                hashMap.put("Status","3");
+                                hashMap.put("Status","4");
                                 reference.updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -244,6 +204,7 @@ public class DetailPostActivity extends AppCompatActivity {
                             intent.putExtra("TargetTo", targetPoint.get(1));
                             intent.putExtra("TargetFrom", targetPoint.get(0));
                             startActivity(intent);
+                            finish();
                         }
                     }
 
@@ -253,8 +214,6 @@ public class DetailPostActivity extends AppCompatActivity {
                     }
                 });
             }
-
-        }
 
     }
 

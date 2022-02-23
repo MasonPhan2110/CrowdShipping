@@ -158,7 +158,7 @@ class MapActivity : AppCompatActivity() {
             if(currLat == BigDecimal(targetFrom.latitude()).setScale(3,RoundingMode.HALF_EVEN)&&
                 currLng == BigDecimal(targetFrom.longitude()).setScale(3,RoundingMode.HALF_EVEN)&&
                     btn.text.equals("Di chuyển đến chỗ nhận hàng")){
-                btn.setText("Đã lấy hàng")
+                btn.setText("Lấy hàng")
             }
             if(currLat == BigDecimal(targetTo.latitude()).setScale(3,RoundingMode.HALF_EVEN)&&
                 currLng == BigDecimal(targetTo.longitude()).setScale(3,RoundingMode.HALF_EVEN)&&
@@ -247,6 +247,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var  routeOverview: MapboxRouteOverviewButton
     private lateinit var post: Post
     private lateinit var addressFrom: TextView
+    private lateinit var fragile: TextView
     private lateinit var addressTo: TextView
     private lateinit var type: TextView
     private lateinit var message: ImageView
@@ -273,6 +274,7 @@ class MapActivity : AppCompatActivity() {
         routeOverview = findViewById(R.id.routeOverview)
         addressFrom = findViewById(R.id.addressFrom)
         addressTo = findViewById(R.id.addressTo)
+        fragile = findViewById(R.id.fragile)
         type = findViewById(R.id.type)
         message = findViewById(R.id.btnMSG)
         call = findViewById(R.id.btnCall)
@@ -376,6 +378,9 @@ class MapActivity : AppCompatActivity() {
         addressFrom.setText(addressFrom.text.toString()+" "+post.getAddressFrom()["Address"]+", đường "+ post.getAddressFrom()["Streets"] +", phường "+ post.getAddressFrom()["Wards"] +", quận "+post.getAddressFrom()["District"]+", "+post.getAddressFrom()["City"])
         addressTo.setText(addressTo.text.toString()+" "+post.getAddressTo()["Address"]+", đường "+post.getAddressTo().get("Streets")+", phường " +post.getAddressTo().get("Wards")+", quận "+post.getAddressTo().get("District")+", "+post.getAddressTo().get("City"))
         type.setText(type.text.toString()+post.description)
+        if (!post.fragile||post.fragile==null){
+            fragile.visibility = View.INVISIBLE
+        }
         message.setOnClickListener(View.OnClickListener {
             val intent = Intent(this, MessageActivity::class.java)
             intent.putExtra("userid", post.createID)
@@ -403,8 +408,13 @@ class MapActivity : AppCompatActivity() {
             dialog.setContentView(view)
             dialog.show()
         })
+        if(post.status.equals("1")||post.status.equals("0")){
+            btn.setText("Di chuyển đến chỗ nhận hàng")
+        }else{
+            btn.setText("Di chuyển đến chỗ giao hàng")
+        }
         btn.setOnClickListener {
-            if(btn.text.equals("Đã lấy hàng")){
+            if(btn.text.equals("Lấy hàng")){
                 val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
                 val currentDateandTime = sdf.format(Date())
                 reference =
@@ -417,6 +427,14 @@ class MapActivity : AppCompatActivity() {
                 pushedPostRef.key?.let { it1 -> hashMap.put("NotiID", it1) }
                 hashMap.put("isseen", false)
                 pushedPostRef.setValue(hashMap)
+                btn.setText("Đã lấy hàng")
+            }
+            if(btn.text.equals("Đã lấy hàng")){
+                val reference =
+                    FirebaseDatabase.getInstance().getReference("Post").child(post.postID)
+                val hashMap = java.util.HashMap<String, Any>()
+                hashMap["Status"] = "2"
+                reference.updateChildren(hashMap)
                 btn.setText("Di chuyển đến chỗ giao hàng")
                 clearRouteAndStopNavigation()
                 findRoute(targetTo)
@@ -430,8 +448,15 @@ class MapActivity : AppCompatActivity() {
                     .setPositiveButton(
                         android.R.string.yes
                     ) { dialogInterface, i ->
-                        clearRouteAndStopNavigation()
-                        finish()
+                        val reference =
+                            FirebaseDatabase.getInstance().getReference("Post").child(post.postID)
+                        val hashMap = java.util.HashMap<String, Any>()
+                        hashMap["Status"] = "3"
+                        reference.updateChildren(hashMap).addOnCompleteListener {
+                            clearRouteAndStopNavigation()
+                            finish()
+                        }
+
                     }.setNegativeButton(android.R.string.no, null)
                     .show()
             }
@@ -449,7 +474,14 @@ class MapActivity : AppCompatActivity() {
         mapView.getMapboxMap().loadStyleUri(
             Style.MAPBOX_STREETS
         ) {
-            findRoute(targetFrom)
+
+            if(post.status.equals("1")||post.status.equals("0")){
+                Log.d("Statusssssssssssss", post.status)
+                findRoute(targetFrom)
+            }else{
+                Log.d("Statusssssssssssss", targetTo.toString())
+                findRoute(targetTo)
+            }
         }
         mapView.location.apply {
             setLocationProvider(navigationLocationProvider)
