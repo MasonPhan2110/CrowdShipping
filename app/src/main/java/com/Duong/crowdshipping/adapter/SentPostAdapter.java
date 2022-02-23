@@ -162,6 +162,7 @@ public class SentPostAdapter extends   RecyclerView.Adapter<RecyclerView.ViewHol
                     public void onClick(View view) {
                         Intent intent = new Intent(mcontext, MapActivity.class);
                         intent.putExtra("Post", (Serializable) post);
+                        Log.i("SearchApiExampleeeeee", "Search result: " + targetPoint);
                         intent.putExtra("TargetTo", targetPoint.get(1));
                         intent.putExtra("TargetFrom", targetPoint.get(0));
                         mcontext.startActivity(intent);
@@ -223,8 +224,9 @@ public class SentPostAdapter extends   RecyclerView.Adapter<RecyclerView.ViewHol
 
         @Override
         public void onResult(@NonNull SearchSuggestion suggestion, @NonNull SearchResult result, @NonNull ResponseInfo info) {
-            targetPoint.add(result.getCoordinate());
-            Log.i("SearchApiExample", "Search result: " + targetPoint);
+            if(targetPoint.size()<=2) {
+                targetPoint.add(result.getCoordinate());
+            }
         }
 
         @Override

@@ -474,7 +474,7 @@ class MapActivity : AppCompatActivity() {
         mapView.getMapboxMap().loadStyleUri(
             Style.MAPBOX_STREETS
         ) {
-
+            Log.d("Statusssssssssssss", post.status)
             if(post.status.equals("1")||post.status.equals("0")){
                 Log.d("Statusssssssssssss", post.status)
                 findRoute(targetFrom)
@@ -483,6 +483,7 @@ class MapActivity : AppCompatActivity() {
                 findRoute(targetTo)
             }
         }
+
         mapView.location.apply {
             setLocationProvider(navigationLocationProvider)
 
