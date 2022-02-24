@@ -1,29 +1,27 @@
 package com.Duong.crowdshipping.Activity;
 
-import static android.os.Build.VERSION_CODES.P;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -34,70 +32,64 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.Duong.crowdshipping.Extend.GetAddress;
+import com.Duong.crowdshipping.Extend.GetDistance;
 import com.Duong.crowdshipping.R;
 import com.Duong.crowdshipping.model.City;
 import com.Duong.crowdshipping.model.District;
+import com.Duong.crowdshipping.model.Users;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DistanceMatrixElement;
+import com.google.maps.model.DistanceMatrixRow;
 import com.mapbox.navigation.base.options.NavigationOptions;
 import com.mapbox.navigation.core.MapboxNavigation;
 import com.mapbox.navigation.core.MapboxNavigationProvider;
 import com.mapbox.navigation.core.trip.session.LocationMatcherResult;
 import com.mapbox.navigation.core.trip.session.LocationObserver;
-import com.mapbox.navigation.ui.maps.location.NavigationLocationProvider;
-import com.mapbox.search.MapboxSearchSdk;
 import com.mapbox.search.ResponseInfo;
-import com.mapbox.search.SearchEngine;
-import com.mapbox.search.SearchOptions;
-import com.mapbox.search.SearchRequestTask;
-import com.mapbox.search.SearchSelectionCallback;
+import com.mapbox.search.SearchCallback;
 import com.mapbox.search.result.SearchResult;
-import com.mapbox.search.result.SearchSuggestion;
-import com.smarteist.autoimageslider.Transformations.CubeInRotationTransformation;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
+import com.google.android.gms.maps.model.LatLng;
 
 public class CreatePostActivity extends AppCompatActivity {
     String type, item;
     LayoutInflater inflater;
-    LinearLayout linear_layout;
-    TextView post;
+    LinearLayout linear_layout,fromWrap;
+    RelativeLayout autoAddressWrap;
+    TextView post,editAddress,autoAddress;
     EditText addressFrom, addressTo, phoneFrom, phoneTo;
     Button get_image;
     List<Uri> imagePath = new ArrayList<>();
@@ -107,9 +99,32 @@ public class CreatePostActivity extends AppCompatActivity {
     String userid = firebaseUser.getUid();
     String jsonFileString = null;
     List<City> city = new ArrayList<>();
-    List<District> districts = new ArrayList<>();
     String[] cityName, districtName, wardsName, streetName;
-    NavigationLocationProvider navigationLocationProvider = new NavigationLocationProvider();
+    String curentLocation, address, street,ward,district,cit;
+    Boolean useAutoAddress = true;
+
+
+    private final SearchCallback searchCallback = new SearchCallback() {
+
+        @Override
+        public void onResults(@NonNull List<? extends SearchResult> results, @NonNull ResponseInfo responseInfo) {
+            if (results.isEmpty()) {
+                Log.i("SearchApiExample", "No reverse geocoding results");
+            } else {
+                Log.i("SearchApiExampleCreatePost", "Reverse geocoding results: " + results.get(0));
+                for(int i = 0;i<results.size();i++){
+                    Log.i("SearchApiExampleCreatePost", "Reverse geocoding results: " + results.get(i));
+                }
+
+            }
+        }
+
+        @Override
+        public void onError(@NonNull Exception e) {
+            Log.i("SearchApiExample", "Reverse geocoding error", e);
+        }
+    };
+
     LocationObserver locationObserver = new LocationObserver() {
         Boolean isFirst = true;
         @Override
@@ -120,7 +135,33 @@ public class CreatePostActivity extends AppCompatActivity {
         @Override
         public void onNewLocationMatcherResult(@NonNull LocationMatcherResult locationMatcherResult) {
             if(isFirst){
+                Location enhanceLocation = locationMatcherResult.getEnhancedLocation();
                 Log.d("CurrLocation", locationMatcherResult.getEnhancedLocation().toString());
+                LatLng latLng = new LatLng(enhanceLocation.getLatitude(),enhanceLocation.getLongitude());
+                GetAddress getAddress = new GetAddress(latLng, CreatePostActivity.this);
+                List<Address> addresses = getAddress.run();
+                for(int i = 0;i<addresses.size();i++){
+                    autoAddress.setText(addresses.get(i).getAddressLine(0));
+                    curentLocation = addresses.get(i).getAddressLine(0);
+                    address = curentLocation.split("Đường")[0];
+                    String str = curentLocation.split("Đường")[1];
+                    String[] arrStr = str.split(",",5);
+                    for(int j=0;j< arrStr.length;j++){
+                        Log.i("SearchApiExampleCreatePost", "Reverse geocoding results: "+arrStr[j]);
+                    }
+                    street = arrStr[0];
+                    ward = arrStr[1];
+                    district = arrStr[2];
+                    cit = arrStr[3];
+                    MapboxNavigationProvider.destroy();
+                    mapboxNavigation.unregisterLocationObserver(locationObserver);
+                }
+
+//                reverseGeocoding = MapboxSearchSdk.getReverseGeocodingSearchEngine();
+//                final ReverseGeoOptions options = new ReverseGeoOptions.Builder(Point.fromLngLat(enhanceLocation.getLongitude(),enhanceLocation.getLatitude()))
+//                        .limit(1)
+//                        .build();
+//                searchRequestTask = reverseGeocoding.search(options, searchCallback);
                 isFirst = false;
             }
 
@@ -385,12 +426,46 @@ public class CreatePostActivity extends AppCompatActivity {
                     phoneFrom = view1.findViewById(R.id.phoneFrom);
                     phoneTo = view1.findViewById(R.id.phoneTo);
                     get_image = view1.findViewById(R.id.btn_get_img);
+                    fromWrap = view1.findViewById(R.id.fromWrap);
+                    autoAddress = view1.findViewById(R.id.autoAddress);
+                    editAddress = view1.findViewById(R.id.editAddress);
+                    autoAddressWrap = view1.findViewById(R.id.autoAddressWrap);
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Users user = snapshot.getValue(Users.class);
+                            phoneFrom.setText(user.getPhone());
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    autoAddress.setText(curentLocation);
+                    editAddress.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(useAutoAddress){
+                                fromWrap.setVisibility(View.VISIBLE);
+                                autoAddress.setVisibility(View.GONE);
+                                editAddress.setText("Cancel");
+                                useAutoAddress= false;
+                            }else{
+                                fromWrap.setVisibility(View.GONE);
+                                autoAddress.setVisibility(View.VISIBLE);
+                                editAddress.setText("Sửa");
+                                useAutoAddress=true;
+                            }
+
+                        }
+                    });
 
 
                     ArrayAdapter watchAdapter = new ArrayAdapter(CreatePostActivity.this, android.R.layout.simple_spinner_item, watchType);
                     ArrayAdapter shipCostAdapter1 = new ArrayAdapter(CreatePostActivity.this, android.R.layout.simple_spinner_item, payshipType);
                     ArrayAdapter spinner_watch_city_adapter = new ArrayAdapter(CreatePostActivity.this, android.R.layout.simple_spinner_item, cityName);
-
                     spinner_watch.setAdapter(watchAdapter);
                     spinner_ship_cost_watch.setAdapter(shipCostAdapter1);
                     spinner_watch_cityFrom.setAdapter(spinner_watch_city_adapter);
@@ -503,28 +578,48 @@ public class CreatePostActivity extends AppCompatActivity {
                     post.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (addressFrom.getText().toString().matches("")
+                            if (!useAutoAddress&&addressFrom.getText().toString().matches("")
                                     || addressTo.getText().toString().matches("")
                                     || phoneFrom.getText().toString().matches("")
                                     || phoneTo.getText().toString().matches("")) {
                                 Toast.makeText(CreatePostActivity.this, "Error", Toast.LENGTH_SHORT).show();
                             } else {
-                                postClick(type,
-                                        item,
-                                        addressFrom.getText().toString(),
-                                        addressTo.getText().toString(),
-                                        phoneFrom.getText().toString(),
-                                        phoneTo.getText().toString(),
-                                        spinner_watch.getSelectedItem().toString(),
-                                        spinner_ship_cost_watch.getSelectedItem().toString(),
-                                        spinner_watch_cityFrom.getSelectedItem().toString(),
-                                        spinner_watch_cityTo.getSelectedItem().toString(),
-                                        spinner_watch_districtFrom.getSelectedItem().toString(),
-                                        spinner_watch_districtTo.getSelectedItem().toString(),
-                                        spinner_watch_wardsFrom.getSelectedItem().toString(),
-                                        spinner_watch_wardsTo.getSelectedItem().toString(),
-                                        spinner_watch_streetFrom.getSelectedItem().toString(),
-                                        spinner_watch_streetTo.getSelectedItem().toString(), checkbox_watch_fragile.isChecked());
+                                if(useAutoAddress){
+                                    postClick(type,
+                                            item,
+                                            address,
+                                            addressTo.getText().toString(),
+                                            phoneFrom.getText().toString(),
+                                            phoneTo.getText().toString(),
+                                            spinner_watch.getSelectedItem().toString(),
+                                            spinner_ship_cost_watch.getSelectedItem().toString(),
+                                            cit,
+                                            spinner_watch_cityTo.getSelectedItem().toString(),
+                                            district,
+                                            spinner_watch_districtTo.getSelectedItem().toString(),
+                                            ward,
+                                            spinner_watch_wardsTo.getSelectedItem().toString(),
+                                            street,
+                                            spinner_watch_streetTo.getSelectedItem().toString(), checkbox_watch_fragile.isChecked());
+                                }else{
+                                    postClick(type,
+                                            item,
+                                            addressFrom.getText().toString(),
+                                            addressTo.getText().toString(),
+                                            phoneFrom.getText().toString(),
+                                            phoneTo.getText().toString(),
+                                            spinner_watch.getSelectedItem().toString(),
+                                            spinner_ship_cost_watch.getSelectedItem().toString(),
+                                            spinner_watch_cityFrom.getSelectedItem().toString(),
+                                            spinner_watch_cityTo.getSelectedItem().toString(),
+                                            spinner_watch_districtFrom.getSelectedItem().toString(),
+                                            spinner_watch_districtTo.getSelectedItem().toString(),
+                                            spinner_watch_wardsFrom.getSelectedItem().toString(),
+                                            spinner_watch_wardsTo.getSelectedItem().toString(),
+                                            spinner_watch_streetFrom.getSelectedItem().toString(),
+                                            spinner_watch_streetTo.getSelectedItem().toString(), checkbox_watch_fragile.isChecked());
+                                }
+
                             }
                         }
                     });
@@ -1085,57 +1180,98 @@ public class CreatePostActivity extends AppCompatActivity {
     private void postClick(String type, String item, String addressFrom, String addressTo, String phoneFrom, String phoneTo, String spinnerType, String spinnerShip,
                            String cityFrom, String cityTo, String districtFrom, String districtTo, String wardsFrom, String wardsTo, String streetFrom, String streetTo, Boolean fragile) {
         //Toast.makeText(CreatePostActivity.this,type+item,Toast.LENGTH_SHORT).show();
-        final ProgressDialog pd = new ProgressDialog(CreatePostActivity.this);
-        pd.setMessage("Uploading...");
-        pd.show();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        for (int i = 0; i < imagePath.size(); i++) {
-            StorageReference storageReference = storage.getReferenceFromUrl("gs://crowdshipping-387fa.appspot.com").child("images/"
-                    + UUID.randomUUID().toString());
-            int finalI = i;
-            storageReference.putFile((imagePath.get(i))).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @NonNull
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
-                    }
-                    return storageReference.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        Uri downloadURI = task.getResult();
-                        String mURI = downloadURI.toString();
-                        imageURI.put("Image" + finalI, mURI);
-                        HashMap<String, String> AddressFrom = new HashMap<>();
-                        AddressFrom.put("City", cityFrom);
-                        AddressFrom.put("District", districtFrom);
-                        AddressFrom.put("Wards", wardsFrom);
-                        AddressFrom.put("Streets", streetFrom);
-                        AddressFrom.put("Address", addressFrom);
-                        HashMap<String, String> AddressTo = new HashMap<>();
-                        AddressTo.put("City", cityTo);
-                        AddressTo.put("District", districtTo);
-                        AddressTo.put("Wards", wardsTo);
-                        AddressTo.put("Streets", streetTo);
-                        AddressTo.put("Address", addressTo);
+        final BottomSheetDialog dialog = new BottomSheetDialog(this,R.style.MaterialDialogSheet);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        View view = inflater.inflate(R.layout.popup_confirm_post,null);
+        TextView postCon, typeCon, addressFromCon, addressToCon, distance,shipFee,shipPayment,fragileCon;
+        postCon = view.findViewById(R.id.post);
+        typeCon = view.findViewById(R.id.type);
+        addressFromCon = view.findViewById(R.id.from);
+        addressToCon = view.findViewById(R.id.to);
+        distance = view.findViewById(R.id.distance);
+        shipFee = view.findViewById(R.id.shipFee);
+        shipPayment = view.findViewById(R.id.shipPayment);
+        fragileCon = view.findViewById(R.id.fragile);
 
-                        if (finalI + 1 == imagePath.size()) {
-                            postToDatabase(pd, type, item, AddressFrom, AddressTo, phoneFrom, phoneTo, spinnerType, spinnerShip, fragile);
-                        }
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    pd.dismiss();
-                }
-            });
+        typeCon.setText(typeCon.getText().toString()+spinnerType);
+        addressFromCon.setText(addressFromCon.getText().toString()+addressFrom+" Đường "+ streetFrom + ", "+wardsFrom+", "+districtFrom+", "+cityFrom);
+        addressToCon.setText(addressToCon.getText().toString()+addressTo+" Đường "+ streetTo + ", "+wardsTo+", "+districtTo+", "+cityTo);
+        shipPayment.setText(shipPayment.getText().toString()+spinnerShip);
+        if(fragile){
+            fragileCon.setVisibility(View.VISIBLE);
+        }else{
+            fragileCon.setVisibility(View.GONE);
+        }
+        GetDistance getDistance = new GetDistance(CreatePostActivity.this);
+        try {
+            distance.setText(distance.getText()+getDistance.run().toString()+" km");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ApiException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        dialog.setContentView(view);
+        dialog.show();
+        postCon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                final ProgressDialog pd = new ProgressDialog(CreatePostActivity.this);
+                pd.setMessage("Uploading...");
+                pd.show();
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                for (int i = 0; i < imagePath.size(); i++) {
+                    StorageReference storageReference = storage.getReferenceFromUrl("gs://crowdshipping-387fa.appspot.com").child("images/"
+                            + UUID.randomUUID().toString());
+                    int finalI = i;
+                    storageReference.putFile((imagePath.get(i))).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @NonNull
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            return storageReference.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Uri downloadURI = task.getResult();
+                                String mURI = downloadURI.toString();
+                                imageURI.put("Image" + finalI, mURI);
+                                HashMap<String, String> AddressFrom = new HashMap<>();
+                                AddressFrom.put("City", cityFrom);
+                                AddressFrom.put("District", districtFrom);
+                                AddressFrom.put("Wards", wardsFrom);
+                                AddressFrom.put("Streets", streetFrom);
+                                AddressFrom.put("Address", addressFrom);
+                                HashMap<String, String> AddressTo = new HashMap<>();
+                                AddressTo.put("City", cityTo);
+                                AddressTo.put("District", districtTo);
+                                AddressTo.put("Wards", wardsTo);
+                                AddressTo.put("Streets", streetTo);
+                                AddressTo.put("Address", addressTo);
+
+                                if (finalI + 1 == imagePath.size()) {
+                                    postToDatabase(pd, type, item, AddressFrom, AddressTo, phoneFrom, phoneTo, spinnerType, spinnerShip, fragile);
+                                }
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            pd.dismiss();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void postToDatabase(ProgressDialog pd, String type, String item, HashMap<String, String> addressFrom, HashMap<String, String> addressTo, String phoneFrom, String phoneTo, String spinnerType, String spinnerShip, Boolean fragile) {

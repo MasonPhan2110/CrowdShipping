@@ -28,45 +28,78 @@
                 android:textSize="17dp"
                 android:textStyle="bold"
                 android:layout_marginTop="7dp"/>
-            <Spinner
-                android:background="@drawable/backgroundgg"
-                android:id="@+id/dropdown_cityFrom"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:spinnerMode="dropdown"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"/>
-            <Spinner
-                android:background="@drawable/backgroundgg"
-                android:id="@+id/dropdown_districtFrom"
+                android:layout_height="wrap_content"
+                android:id="@+id/autoAddressWrap"
+                android:padding="5dp"
+                android:layout_marginTop="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:id="@+id/autoAddress"
+                    android:textSize="15dp"
+                    android:layout_toLeftOf="@id/editAddress"
+                    android:layout_alignParentLeft="true"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sửa"
+                    android:layout_alignParentRight="true"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:textColor="@color/bluefb"
+                    android:textStyle="bold"
+                    android:id="@+id/editAddress"/>
+
+            </RelativeLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:spinnerMode="dropdown"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"/>
-            <Spinner
-                android:background="@drawable/backgroundgg"
-                android:id="@+id/dropdown_wardsFrom"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:spinnerMode="dropdown"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"/>
-            <Spinner
-                android:background="@drawable/backgroundgg"
-                android:id="@+id/dropdown_streetFrom"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:spinnerMode="dropdown"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"/>
-            <EditText
-                android:background="@drawable/backgroundgg"
-                android:id="@+id/addressFrom"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Nhập địa chỉ món hàng"
-                android:padding="5dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/fromWrap"
+                android:visibility="gone">
+                <Spinner
+                    android:background="@drawable/backgroundgg"
+                    android:id="@+id/dropdown_cityFrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:spinnerMode="dropdown"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"/>
+                <Spinner
+                    android:background="@drawable/backgroundgg"
+                    android:id="@+id/dropdown_districtFrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:spinnerMode="dropdown"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"/>
+                <Spinner
+                    android:background="@drawable/backgroundgg"
+                    android:id="@+id/dropdown_wardsFrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:spinnerMode="dropdown"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"/>
+                <Spinner
+                    android:background="@drawable/backgroundgg"
+                    android:id="@+id/dropdown_streetFrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:spinnerMode="dropdown"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"/>
+                <EditText
+                    android:background="@drawable/backgroundgg"
+                    android:id="@+id/addressFrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Nhập địa chỉ món hàng"
+                    android:padding="5dp"/>
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -181,5 +214,4 @@
                 android:layout_marginTop="7dp"/>
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>
