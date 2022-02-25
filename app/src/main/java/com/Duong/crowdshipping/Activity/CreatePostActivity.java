@@ -111,27 +111,6 @@ public class CreatePostActivity extends AppCompatActivity {
     ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
 
 
-    private final SearchCallback searchCallback = new SearchCallback() {
-
-        @Override
-        public void onResults(@NonNull List<? extends SearchResult> results, @NonNull ResponseInfo responseInfo) {
-            if (results.isEmpty()) {
-                Log.i("SearchApiExample", "No reverse geocoding results");
-            } else {
-                Log.i("SearchApiExampleCreatePost", "Reverse geocoding results: " + results.get(0));
-                for(int i = 0;i<results.size();i++){
-                    Log.i("SearchApiExampleCreatePost", "Reverse geocoding results: " + results.get(i));
-                }
-
-            }
-        }
-
-        @Override
-        public void onError(@NonNull Exception e) {
-            Log.i("SearchApiExample", "Reverse geocoding error", e);
-        }
-    };
-
     LocationObserver locationObserver = new LocationObserver() {
         Boolean isFirst = true;
         @Override
@@ -149,9 +128,19 @@ public class CreatePostActivity extends AppCompatActivity {
                 List<Address> addresses = getAddress.run();
                 for(int i = 0;i<addresses.size();i++){
                     autoAddress.setText(addresses.get(i).getAddressLine(0));
+
                     curentLocation = addresses.get(i).getAddressLine(0);
-                    address = curentLocation.split("Đường")[0];
-                    String str = curentLocation.split("Đường")[1];
+                    String str = "";
+                    int index = curentLocation.indexOf("Đường");
+                    if(index>0){
+                        address = curentLocation.split("Đường")[0];
+                        str = curentLocation.split("Đường")[1];
+                    }else{
+                        address = curentLocation.split("-")[0];
+                        str = curentLocation.split("-")[1];
+                    }
+                    Log.d("autoAddress", addresses.get(i).getAddressLine(0));
+
                     String[] arrStr = str.split(",",5);
                     for(int j=0;j< arrStr.length;j++){
                         Log.i("SearchApiExampleCreatePost", "Reverse geocoding results: "+arrStr[j]);
