@@ -14,8 +14,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.Duong.crowdshipping.Activity.ForgotPassActivity;
 import com.Duong.crowdshipping.Controller.Authentication;
 import com.Duong.crowdshipping.Extend.BaseActivity;
 import com.Duong.crowdshipping.Activity.HomeActivity;
@@ -27,9 +29,10 @@ public class LoginActivity extends BaseActivity {
     Button gg, btn_signup;
     EditText email, pass;
     LinearLayout footer;
-    TextView text, signin,text1, text_signup;
+    TextView text, signin,text1, text_signup,forgotPass;
     View back, sep_signup;
     Button fb;
+    ProgressBar pBar;
 
 
     @Override
@@ -74,8 +77,10 @@ public class LoginActivity extends BaseActivity {
         text1 = findViewById(R.id.text1);
         back = findViewById(R.id.back);
         text_signup = findViewById(R.id.text_signup);
+        forgotPass = findViewById(R.id.forgotPass);
         //View
         sep_signup = findViewById(R.id.sep_signup);
+        pBar = findViewById(R.id.pBar);
         int dp = 10;
         int px = (int) (dp*getResources().getDisplayMetrics().density);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -130,8 +135,16 @@ public class LoginActivity extends BaseActivity {
         signin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pBar.setVisibility(View.VISIBLE);
                 Authentication fauth = new Authentication();
-                fauth.signin(email.getText().toString(),pass.getText().toString(),LoginActivity.this);
+                fauth.signin(email.getText().toString(),pass.getText().toString(),LoginActivity.this, pBar);
+            }
+        });
+        forgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, ForgotPassActivity.class);
+                startActivity(intent);
             }
         });
     }

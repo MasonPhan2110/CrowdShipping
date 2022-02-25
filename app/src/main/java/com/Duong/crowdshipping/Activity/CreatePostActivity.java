@@ -40,8 +40,10 @@ import android.widget.Toast;
 import com.Duong.crowdshipping.Extend.GetAddress;
 import com.Duong.crowdshipping.Extend.GetDistance;
 import com.Duong.crowdshipping.R;
+import com.Duong.crowdshipping.adapter.SliderAdapter;
 import com.Duong.crowdshipping.model.City;
 import com.Duong.crowdshipping.model.District;
+import com.Duong.crowdshipping.model.SliderData;
 import com.Duong.crowdshipping.model.Users;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -83,13 +85,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import com.google.android.gms.maps.model.LatLng;
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.SliderAnimations;
+import com.smarteist.autoimageslider.SliderView;
 
 public class CreatePostActivity extends AppCompatActivity {
     String type, item;
     LayoutInflater inflater;
     LinearLayout linear_layout,fromWrap;
     RelativeLayout autoAddressWrap;
-    TextView post,editAddress,autoAddress;
+    TextView post,editAddress,autoAddress, sumFee;
     EditText addressFrom, addressTo, phoneFrom, phoneTo;
     Button get_image;
     List<Uri> imagePath = new ArrayList<>();
@@ -102,6 +107,8 @@ public class CreatePostActivity extends AppCompatActivity {
     String[] cityName, districtName, wardsName, streetName;
     String curentLocation, address, street,ward,district,cit;
     Boolean useAutoAddress = true;
+    SliderView sliderView;
+    ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
 
 
     private final SearchCallback searchCallback = new SearchCallback() {
@@ -1193,7 +1200,16 @@ public class CreatePostActivity extends AppCompatActivity {
         shipFee = view.findViewById(R.id.shipFee);
         shipPayment = view.findViewById(R.id.shipPayment);
         fragileCon = view.findViewById(R.id.fragile);
-
+        sumFee = view.findViewById(R.id.sumFee);
+        sliderView = view.findViewById(R.id.slider);
+        for(int i = 0;i<imagePath.size();i++){
+            sliderDataArrayList.add(new SliderData(imagePath.get(i).toString()));
+        }
+        SliderAdapter adapter = new SliderAdapter( sliderDataArrayList);
+        sliderView.setAutoCycleDirection(SliderView.LAYOUT_DIRECTION_LTR);
+        sliderView.setSliderAdapter(adapter);
+        sliderView.setInfiniteAdapterEnabled(false);
+        sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
         typeCon.setText(typeCon.getText().toString()+spinnerType);
         addressFromCon.setText(addressFromCon.getText().toString()+addressFrom+" Đường "+ streetFrom + ", "+wardsFrom+", "+districtFrom+", "+cityFrom);
         addressToCon.setText(addressToCon.getText().toString()+addressTo+" Đường "+ streetTo + ", "+wardsTo+", "+districtTo+", "+cityTo);
@@ -1205,7 +1221,25 @@ public class CreatePostActivity extends AppCompatActivity {
         }
         GetDistance getDistance = new GetDistance(CreatePostActivity.this);
         try {
-            distance.setText(distance.getText()+getDistance.run().toString()+" km");
+            float distances = getDistance.run();
+            distance.setText(distance.getText().toString()+(distances)+" km");
+            if(distances<1){
+                shipFee.setText(shipFee.getText().toString()+"15,000 vnđ");
+                if(fragile){
+                    sumFee.setText(sumFee.getText().toString()+"20,000 vnđ");
+                }else{
+                    sumFee.setText(sumFee.getText().toString()+"15,000 vnđ");
+                }
+            }else{
+                int n = (int) distances;
+                editFeeString(String.valueOf(120000000000l));
+                shipFee.setText(shipFee.getText().toString()+editFeeString(String.valueOf((long)15000*(n+1)))+" vnđ");
+                if(fragile){
+                    sumFee.setText(sumFee.getText().toString()+editFeeString(String.valueOf((long)15000*(n+1)+5000))+"vnđ");
+                }else{
+                    sumFee.setText(sumFee.getText().toString()+editFeeString(String.valueOf((long)15000*(n+1)))+" vnđ");
+                }
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ApiException e) {
@@ -1356,5 +1390,27 @@ public class CreatePostActivity extends AppCompatActivity {
         super.onDestroy();
         MapboxNavigationProvider.destroy();
         mapboxNavigation.unregisterLocationObserver(locationObserver);
+    }
+    private String editFeeString(String fee){
+        StringBuilder stringBuilder = new StringBuilder(fee);
+        int count =0;
+        if(stringBuilder.length()%3==0){
+            count = stringBuilder.length()/3-1;
+        }else{
+            count = stringBuilder.length()/3;
+        }
+        int[] pos = new int[count];
+        int i = 1;
+        while( i <= count){
+            pos[i-1] = stringBuilder.length()-i*3;
+            i++;
+        }
+
+        for(int j =0; j<count;j++){
+
+            stringBuilder.insert(pos[j],",");
+        }
+        Log.d("Countttttt", String.valueOf(stringBuilder));
+        return String.valueOf(stringBuilder);
     }
 }

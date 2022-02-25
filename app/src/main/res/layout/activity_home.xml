@@ -33,7 +33,7 @@ tools:context=".Activity.HomeActivity">
                 android:padding="5dp"
                 android:background="@drawable/background_search_box"
                 android:id="@+id/search_box"
-                android:layout_marginRight="47dp"
+                android:layout_marginRight="20dp"
                 android:clickable="true"
                 android:layout_gravity="left">
                 <ImageView
@@ -48,13 +48,6 @@ tools:context=".Activity.HomeActivity">
                     android:textSize="17dp"/>
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_round_chat_24"
-                android:id="@+id/message"
-                android:layout_gravity="right"
-                android:layout_marginRight="10dp"/>
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>

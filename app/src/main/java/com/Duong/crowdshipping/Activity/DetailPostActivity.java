@@ -90,13 +90,15 @@ public class DetailPostActivity extends AppCompatActivity {
         linearLayout = findViewById(R.id.linearLayout);
         ProgressBar pgsBar = findViewById(R.id.pBar);
         toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getPost = findViewById(R.id.getPost);
 //        getPost.bringToFront();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setMinimumHeight(toolbar.getHeight());
         Intent intent = getIntent();
         post = (Post) intent.getSerializableExtra("Post");
         Type = intent.getStringExtra("Type");
@@ -112,9 +114,12 @@ public class DetailPostActivity extends AppCompatActivity {
             }
         });
         if(Type.equals("Sent")){
-            if(post.getStatus().equals("2")){
+            if(post.getStatus().equals("3")){
                 getPost.setVisibility(View.VISIBLE);
                 getPost.setText("Xác nhận");
+            }else if(post.getStatus().equals("0")){
+                getPost.setVisibility(View.VISIBLE);
+                getPost.setText("Sửa đơn hàng");
             }else{
                 getPost.setVisibility(View.GONE);
             }
@@ -199,6 +204,18 @@ public class DetailPostActivity extends AppCompatActivity {
                                     ", quận "+post.getAddressFrom().get("District")+",thành phố "+post.getAddressFrom().get("City") +".\nĐến: "+post.getAddressTo().get("Address")+", đường "+post.getAddressTo().get("Streets")+", phường "+post.getAddressTo().get("Wards")+
                                     ", quận "+post.getAddressTo().get("District")+",thành phố "+post.getAddressTo().get("City") + ".\nSố điện thoại người gửi: "+post.getPhoneFrom() +".\nSố điện thoại người nhận: "+post.getPhoneTo();
                             sendMessage(post.getCreateID(),user.getUid(),msg);
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+                            String currentDateandTime = sdf.format(new Date());
+                            reference1 = FirebaseDatabase.getInstance().getReference("Notification").child(post.getCreateID());
+                            HashMap<String, Object> hashMap1 = new HashMap<>();
+                            DatabaseReference pushedPostRef  = reference1.push();
+                            hashMap1.put("MSG", "Đơn hàng của bạn đã được nhận");
+                            hashMap1.put("PostID", post.getPostID());
+                            hashMap1.put("Time", currentDateandTime);
+                            hashMap1.put("NotiID", pushedPostRef.getKey());
+                            hashMap1.put("isseen", false);
+                            hashMap1.put("isread", false);
+                            pushedPostRef.setValue(hashMap1);
                             Intent intent = new Intent(DetailPostActivity.this, MapActivity.class);
                             intent.putExtra("Post", (Serializable) post);
                             intent.putExtra("TargetTo", targetPoint.get(1));

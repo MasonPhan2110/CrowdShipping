@@ -24,7 +24,15 @@ import com.Duong.crowdshipping.fragment.AccountFragment;
 import com.Duong.crowdshipping.fragment.ActivityFragment;
 import com.Duong.crowdshipping.fragment.HomeFragment;
 import com.Duong.crowdshipping.fragment.PostFragment;
+import com.Duong.crowdshipping.model.Noti;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -34,9 +42,10 @@ public class HomeActivity extends AppCompatActivity {
     ViewPager view_pager;
     TextView title;
     LinearLayout searchBox;
-    ImageView message;
     MenuItem menuItem;
     HomeActivityListener homeActivityBackPress;
+    DatabaseReference reference;
+    FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
     private int[] selectitem = {
             R.drawable.ic_round_home_24,
             R.drawable.ic_round_article_24,
@@ -55,7 +64,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         int flag = HomeActivity.this.getWindow().getDecorView().getSystemUiVisibility();
 //        flag |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
         HomeActivity.this.getWindow().getDecorView().setSystemUiVisibility(flag);
@@ -73,12 +81,21 @@ public class HomeActivity extends AppCompatActivity {
 
         title = findViewById(R.id.title);
         searchBox = findViewById(R.id.search_box);
-        message = findViewById(R.id.message);
-        message.setOnClickListener(new View.OnClickListener() {
+        reference = FirebaseDatabase.getInstance().getReference("Notification").child(fuser.getUid());
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this, ConversationActivity.class);
-                startActivity(intent);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot :snapshot.getChildren()){
+                    Noti noti = dataSnapshot.getValue(Noti.class);
+                    if(!noti.isIsread()){
+                        unselectitem[3] = R.drawable.ic_outline_notifications_active_24;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

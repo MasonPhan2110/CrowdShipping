@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ public class RegisterActivity extends BaseActivity {
     EditText email,phone,pass, username;
     TextView signup;
     RelativeLayout backBtn;
+    ProgressBar pBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +39,13 @@ public class RegisterActivity extends BaseActivity {
         //Text view
         signup = findViewById(R.id.signup);
         backBtn = findViewById(R.id.backBtn);
+        pBar = findViewById(R.id.pBar);
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pBar.setVisibility(View.VISIBLE);
                 Authentication fauth = new Authentication();
-                fauth.signup(email.getText().toString(),pass.getText().toString(),RegisterActivity.this,username.getText().toString(),phone.getText().toString());
+                fauth.signup(email.getText().toString(),pass.getText().toString(),RegisterActivity.this,username.getText().toString(),phone.getText().toString(),pBar);
             }
         });
         backBtn.setOnClickListener(new View.OnClickListener() {

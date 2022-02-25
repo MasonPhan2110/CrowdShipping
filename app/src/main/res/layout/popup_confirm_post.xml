@@ -88,7 +88,19 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/fragile"
-                android:visibility="invisible"
-                android:layout_marginBottom="20dp"/>
+                android:visibility="gone"
+                />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Tổng giá tiền: "
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/sumFee"
+        android:textAllCaps="true"/>
 
 </LinearLayout>

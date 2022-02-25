@@ -426,6 +426,7 @@ class MapActivity : AppCompatActivity() {
                 hashMap.put("Time", currentDateandTime)
                 pushedPostRef.key?.let { it1 -> hashMap.put("NotiID", it1) }
                 hashMap.put("isseen", false)
+                hashMap.put("isread", false)
                 pushedPostRef.setValue(hashMap)
                 btn.setText("Đã lấy hàng")
             }
@@ -453,6 +454,19 @@ class MapActivity : AppCompatActivity() {
                         val hashMap = java.util.HashMap<String, Any>()
                         hashMap["Status"] = "3"
                         reference.updateChildren(hashMap).addOnCompleteListener {
+                            val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                            val currentDateandTime = sdf.format(Date())
+                            var databaseReference =
+                                FirebaseDatabase.getInstance().getReference("Notification").child(post.createID)
+                            val pushedPostRef: DatabaseReference = databaseReference.push()
+                            var hashmap = HashMap<String, Any>()
+                            hashmap.put("MSG", "Người giao hàng cho đơn hàng "+ post.postID+" đã giao hàng. Bạn cần xác nhận để hoàn tất đơn hàng")
+                            hashmap.put("PostID", post.postID)
+                            hashmap.put("Time", currentDateandTime)
+                            pushedPostRef.key?.let { it1 -> hashMap.put("NotiID", it1) }
+                            hashmap.put("isseen", false)
+                            hashmap.put("isread", false)
+                            pushedPostRef.setValue(hashmap)
                             clearRouteAndStopNavigation()
                             finish()
                         }

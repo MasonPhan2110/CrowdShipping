@@ -3,15 +3,25 @@ package com.Duong.crowdshipping.model;
 public class Noti {
     String MSG, PostID,Time,NotiID;
     private boolean isseen;
-    public Noti(String MSG, String PostID, String Time, String NotiID, boolean isseen){
+    private boolean isread;
+    public Noti(String MSG, String PostID, String Time, String NotiID, boolean isseen, boolean isread){
         this.MSG = MSG;
         this.PostID = PostID;
         this.Time = Time;
         this.NotiID = NotiID;
         this.isseen = isseen;
+        this.isread = isread;
     }
     public Noti(){
 
+    }
+
+    public boolean isIsread() {
+        return isread;
+    }
+
+    public void setIsread(boolean isread) {
+        this.isread = isread;
     }
 
     public boolean isIsseen() {

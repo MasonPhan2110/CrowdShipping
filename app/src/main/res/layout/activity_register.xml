@@ -12,19 +12,28 @@
     tools:context=".Login.RegisterActivity"
     android:weightSum="10">
 
+    <ProgressBar
+        android:padding="180dp"
+        android:id="@+id/pBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+    </ProgressBar>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:gravity="center_vertical"
         android:id="@+id/backBtn">
+
         <View
             android:id="@+id/back"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
             android:background="@drawable/ic_round_arrow_back_ios_24"
-            android:visibility="visible"
-            android:layout_alignParentLeft="true"/>
+            android:visibility="visible" />
 
         <TextView
             android:layout_centerVertical="true"

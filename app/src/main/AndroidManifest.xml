@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activity.ForgotPassActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activity.MapActivity"
             android:exported="false" />
         <activity

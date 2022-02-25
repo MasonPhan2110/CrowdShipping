@@ -3,6 +3,8 @@ package com.Duong.crowdshipping.Controller;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,15 +26,16 @@ public class Authentication {
     public Authentication(){
 
     }
-    public void signin(String email, String password, Activity activity){
+    public void signin(String email, String password, Activity activity,ProgressBar pBar){
         firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                pBar.setVisibility(View.GONE);
                 check(task.isSuccessful(),"signin", activity);
             }
         });
     }
-    public void signup(String email, String password,Activity activity,String username,String phone){
+    public void signup(String email, String password, Activity activity, String username, String phone, ProgressBar pBar){
         this.email = email;
         this.username = username;
         this.phone = phone;
@@ -40,6 +43,7 @@ public class Authentication {
         firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                pBar.setVisibility(View.GONE);
                 check(task.isSuccessful(),"signup", activity);
                 Log.d("SignupActivity", task.getResult().toString());
             }
