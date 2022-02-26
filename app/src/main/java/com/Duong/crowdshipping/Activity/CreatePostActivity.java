@@ -128,7 +128,6 @@ public class CreatePostActivity extends AppCompatActivity {
                 List<Address> addresses = getAddress.run();
                 for(int i = 0;i<addresses.size();i++){
                     autoAddress.setText(addresses.get(i).getAddressLine(0));
-
                     curentLocation = addresses.get(i).getAddressLine(0);
                     String str = "";
                     int index = curentLocation.indexOf("Đường");
