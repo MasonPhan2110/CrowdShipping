@@ -43,7 +43,7 @@ public class GetDistance  {
     public GetDistance(Context mcontext){
         this.mcontext = mcontext;
     }
-    public Float run() throws InterruptedException, ApiException, IOException {
+    public Float run(String from, String to) throws InterruptedException, ApiException, IOException {
         String API_KEY = "AIzaSyDLH-Rpep4GMrXNFYFRVFQXMnf3ESV5lQI";
         GeoApiContext.Builder builder = new GeoApiContext.Builder();
         builder.apiKey(API_KEY);

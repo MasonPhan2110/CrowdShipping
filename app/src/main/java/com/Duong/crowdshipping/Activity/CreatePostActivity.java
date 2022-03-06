@@ -1174,7 +1174,7 @@ public class CreatePostActivity extends AppCompatActivity {
 
     private void postClick(String type, String item, String addressFrom, String addressTo, String phoneFrom, String phoneTo, String spinnerType, String spinnerShip,
                            String cityFrom, String cityTo, String districtFrom, String districtTo, String wardsFrom, String wardsTo, String streetFrom, String streetTo, Boolean fragile) {
-        //Toast.makeText(CreatePostActivity.this,type+item,Toast.LENGTH_SHORT).show();
+        Toast.makeText(CreatePostActivity.this,type+item,Toast.LENGTH_SHORT).show();
         final BottomSheetDialog dialog = new BottomSheetDialog(this,R.style.MaterialDialogSheet);
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         dialog.getWindow().setGravity(Gravity.BOTTOM);
@@ -1209,7 +1209,8 @@ public class CreatePostActivity extends AppCompatActivity {
         }
         GetDistance getDistance = new GetDistance(CreatePostActivity.this);
         try {
-            float distances = getDistance.run();
+            float distances = getDistance.run(addressFromCon.getText().toString(),addressToCon.getText().toString());
+            Log.d("Distancesssss", String.valueOf(distances));
             distance.setText(distance.getText().toString()+(distances)+" km");
             if(distances<1){
                 shipFee.setText(shipFee.getText().toString()+"15,000 vnđ");
@@ -1280,7 +1281,7 @@ public class CreatePostActivity extends AppCompatActivity {
                                 AddressTo.put("Address", addressTo);
 
                                 if (finalI + 1 == imagePath.size()) {
-                                    postToDatabase(pd, type, item, AddressFrom, AddressTo, phoneFrom, phoneTo, spinnerType, spinnerShip, fragile);
+                                    postToDatabase(pd, type, item, AddressFrom, AddressTo, phoneFrom, phoneTo, spinnerType, spinnerShip, fragile,distance.getText().toString(), sumFee.getText().toString());
                                 }
                             }
                         }
@@ -1296,7 +1297,7 @@ public class CreatePostActivity extends AppCompatActivity {
         });
     }
 
-    private void postToDatabase(ProgressDialog pd, String type, String item, HashMap<String, String> addressFrom, HashMap<String, String> addressTo, String phoneFrom, String phoneTo, String spinnerType, String spinnerShip, Boolean fragile) {
+    private void postToDatabase(ProgressDialog pd, String type, String item, HashMap<String, String> addressFrom, HashMap<String, String> addressTo, String phoneFrom, String phoneTo, String spinnerType, String spinnerShip, Boolean fragile, String distance, String sumFee) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
         DatabaseReference pushedPostRef = reference.push();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
@@ -1315,6 +1316,8 @@ public class CreatePostActivity extends AppCompatActivity {
         hashMap.put("Time", currentDateandTime);
         hashMap.put("Status", "0");
         hashMap.put("Fragile", fragile);
+        hashMap.put("Distance", distance);
+        hashMap.put("SumFee", sumFee);
         pushedPostRef.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
